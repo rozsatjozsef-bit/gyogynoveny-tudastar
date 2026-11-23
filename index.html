@@ -1,0 +1,2231 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Racionális Népgyógyászat & Gyógynövény Adatbázis</title>
+    <style>
+        :root {
+            --bg: #0f1713;
+            --card-bg: #18241e;
+            --card-hover: #1f2e26;
+            --accent: #4ade80;
+            --accent-dim: rgba(74, 222, 128, 0.15);
+            --gold: #fbbf24;
+            --gold-dim: rgba(251, 191, 36, 0.15);
+            --danger: #f87171;
+            --danger-dim: rgba(248, 113, 113, 0.15);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #2a3c33;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #13221a 0%, #0b120e 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 32px 0 24px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs {
+            display: inline-flex;
+            gap: 10px;
+            background: var(--bg);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .nav-tab {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-tab:hover {
+            color: var(--text);
+        }
+
+        .nav-tab.active {
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ADATBÁZIS STÍLUSOK */
+        .controls {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+        }
+
+        .filter-group {
+            margin-top: 16px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            background: var(--bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent-dim);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .reset-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            color: var(--text);
+            border-color: var(--text-muted);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 20px;
+            padding-bottom: 50px;
+        }
+
+        .plant-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.15s, border-color 0.15s, background 0.15s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .plant-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            background: var(--card-hover);
+        }
+
+        .plant-card h2 {
+            font-size: 1.2rem;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .latin-name {
+            font-style: italic;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .drog-name {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .card-effect {
+            font-size: 0.92rem;
+            color: #cbd5e1;
+            margin-bottom: 14px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        .tag.chem {
+            background: rgba(148, 163, 184, 0.12);
+            color: var(--text-muted);
+        }
+
+        /* KVÍZ STÍLUSOK */
+        .quiz-wrapper {
+            max-width: 780px;
+            margin: 28px auto 60px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+        }
+
+        .quiz-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 18px;
+        }
+
+        .level-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .level-btn {
+            background: var(--bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 7px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+
+        .level-btn.active, .level-btn:hover {
+            background: var(--accent-dim);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .quiz-progress-info {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .quiz-progress-info strong {
+            color: var(--accent);
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: var(--bg);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 22px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 10%;
+            transition: width 0.3s ease;
+        }
+
+        .quiz-badge {
+            display: inline-block;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            background: var(--accent-dim);
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .quiz-question {
+            font-size: 1.22rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 20px;
+            white-space: pre-line;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 14px 18px;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 0.98rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .quiz-option:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: var(--card-hover);
+        }
+
+        .quiz-option.correct {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .quiz-option.wrong {
+            background: var(--danger-dim);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .quiz-feedback {
+            margin-top: 18px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            background: var(--bg);
+            border-left: 4px solid var(--accent);
+            font-size: 0.94rem;
+            color: #cbd5e1;
+        }
+
+        .quiz-footer {
+            margin-top: 22px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .next-btn {
+            background: var(--accent);
+            color: #0b120e;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .next-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* RANG / EREDMÉNY KÁRTYA */
+        .result-card {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .rank-icon {
+            font-size: 3.5rem;
+            margin-bottom: 8px;
+        }
+
+        .rank-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+        }
+
+        .rank-title {
+            font-size: 1.9rem;
+            color: var(--gold);
+            margin: 4px 0 12px;
+        }
+
+        .rank-score-pill {
+            display: inline-block;
+            background: var(--gold-dim);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 16px;
+        }
+
+        .rank-desc {
+            max-width: 560px;
+            margin: 0 auto 24px;
+            color: #cbd5e1;
+            font-size: 0.98rem;
+        }
+
+        .missed-box {
+            text-align: left;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+
+        .missed-box h4 {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .missed-box ul {
+            padding-left: 20px;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        .missed-box li {
+            margin-bottom: 4px;
+        }
+
+        .result-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .secondary-btn {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .secondary-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* MODAL */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.78);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            border-radius: 14px;
+            max-width: 680px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: var(--accent);
+        }
+
+        .modal-section {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .modal-section h4 {
+            color: var(--accent);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="container">
+            <h1>🌿 Gyógynövény Adatbázis</h1>
+            <p class="subtitle">Racionális népgyógyászat, farmakognózia és növényi hagyományok</p>
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-view="databaseView" id="dbTabBtn">📚 Adatbázis</button>
+                <button class="nav-tab" data-view="quizView">🧠 Gyógynövény Kvíz</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- ADATBÁZIS NÉZET -->
+        <div id="databaseView">
+            <section class="controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Keresés magyar név, latin név, drog vagy hatóanyag alapján...">
+                </div>
+
+                <div class="filter-group">
+                    <label>Terápiás terület:</label>
+                    <div id="terapiaFilters" class="filter-buttons">
+                        <button class="filter-btn active" data-type="terapia" data-value="Összes">Összes</button>
+                        <button class="filter-btn" data-type="terapia" data-value="Emésztőrendszer">Emésztőrendszer</button>
+                        <button class="filter-btn" data-type="terapia" data-value="Légutak">Légutak</button>
+                        <button class="filter-btn" data-type="terapia" data-value="Idegrendszer">Idegrendszer</button>
+                        <button class="filter-btn" data-type="terapia" data-value="Szív- és érrendszer">Szív- és érrendszer</button>
+                        <button class="filter-btn" data-type="terapia" data-value="Húgyutak">Húgyutak</button>
+                        <button class="filter-btn" data-type="terapia" data-value="Immunrendszer">Immunrendszer</button>
+                        <button class="filter-btn" data-type="terapia" data-value="Női bajok">Női bajok</button>
+                        <button class="filter-btn" data-type="terapia" data-value="Külsőleges">Külsőleges</button>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Hatóanyagcsoport:</label>
+                    <select id="hatoanyagSelect">
+                        <option value="Összes">Minden hatóanyagcsoport</option>
+                        <option value="Illóolajok">Illóolajok</option>
+                        <option value="Cseranyagok">Cseranyagok</option>
+                        <option value="Flavonoidok">Flavonoidok</option>
+                        <option value="Keserűanyagok">Keserűanyagok</option>
+                        <option value="Nyálkaanyagok">Nyálkaanyagok</option>
+                        <option value="Szaponinok">Szaponinok</option>
+                        <option value="Alkaloidok">Alkaloidok</option>
+                        <option value="Kumarinok">Kumarinok</option>
+                        <option value="Poliszacharidok">Poliszacharidok</option>
+                        <option value="Antrakinonok">Antrakinonok</option>
+                        <option value="Antociánok">Antociánok</option>
+                        <option value="Fenolglikozidok">Fenolglikozidok</option>
+                        <option value="Triterpének">Triterpének</option>
+                        <option value="Szterolok">Szterolok</option>
+                    </select>
+                </div>
+
+                <div class="stats-bar">
+                    <span id="resultCount">Betöltés...</span>
+                    <button id="resetFilters" class="reset-btn">Szűrők törlése</button>
+                </div>
+            </section>
+
+            <section id="cardsGrid" class="cards-grid"></section>
+        </div>
+
+        <!-- KVÍZ NÉZET -->
+        <div id="quizView" class="hidden">
+            <div class="quiz-wrapper">
+                <div class="quiz-header">
+                    <div class="level-buttons">
+                        <button class="level-btn active" data-level="1">1. Kezdő (Gyűjtő)</button>
+                        <button class="level-btn" data-level="2">2. Haladó (Herbárius)</button>
+                        <button class="level-btn" data-level="3">3. Mester (Farmakognózia)</button>
+                    </div>
+                    <div class="quiz-progress-info">
+                        Kérdés: <strong id="questionCounter">1 / 10</strong> | Találat: <strong id="scoreText">0</strong>
+                    </div>
+                </div>
+
+                <div class="progress-bar-bg">
+                    <div id="progressBarFill" class="progress-bar-fill"></div>
+                </div>
+
+                <div id="activeQuizBlock">
+                    <div id="quizBadge" class="quiz-badge">1. Szint – Gyógyhatás felismerése</div>
+                    <div id="quizQuestion" class="quiz-question">Kérdés betöltése...</div>
+                    <div id="quizOptions" class="quiz-options"></div>
+                    <div id="quizFeedback" class="quiz-feedback hidden"></div>
+
+                    <div class="quiz-footer">
+                        <button id="nextQuestionBtn" class="next-btn hidden">Következő kérdés &rarr;</button>
+                    </div>
+                </div>
+
+                <div id="quizResultBlock" class="result-card hidden">
+                    <div id="rankIcon" class="rank-icon">🏆</div>
+                    <div class="rank-label">Elért rangod ezen a szinten</div>
+                    <h2 id="rankTitle" class="rank-title">Rang neve</h2>
+                    <div id="rankScorePill" class="rank-score-pill">10 / 10 helyes válasz (100%)</div>
+                    <p id="rankDesc" class="rank-desc">Értékelés szövege...</p>
+
+                    <div id="missedBox" class="missed-box hidden">
+                        <h4>Átnézendő növények ebből a körből:</h4>
+                        <ul id="missedList"></ul>
+                    </div>
+
+                    <div class="result-actions">
+                        <button id="restartSameLevelBtn" class="next-btn">🔄 Új 10 kérdés ezen a szinten</button>
+                        <button id="nextLevelBtn" class="secondary-btn">⬆️ Következő nehézségi szint</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="plantModal" class="modal hidden">
+        <div class="modal-content">
+            <button id="closeModal" class="close-btn">&times;</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const novenyekAdatbazis = [
+            {
+                nev: "Apróbojtorján (Párlófű)",
+                latinNev: "Agrimonia eupatoria",
+                drog: "Agrimoniae herba",
+                hatoanyagCsoportok: ["Cseranyagok", "Flavonoidok", "Triterpének"],
+                terapia: ["Emésztőrendszer", "Légutak", "Külsőleges"],
+                gyujtes: "Június – Augusztus (virágzó hajtás)",
+                hatoanyagok: ["Katekines cseranyagok (4-10%)", "Flavonoidok (apigenin, luteolin)", "Kovasav", "Ursolsav"],
+                hatas: "Erős összehúzó (adsztringens), gyulladáscsökkentő, epehajtó, hasmenés elleni és toroköblögető.",
+                elkeszites: "Forrázat (1-2 teáskanál/csésze, 10-15 perc áztatás). Torokgyulladásra öblögetőként is kiváló.",
+                hagyomany: "Már Dioszkoridész is sebek és májbajok ellen ajánlotta; a magyar népi gyógyászatban a hangszálak és a torok első számú védőnövénye."
+            },
+            {
+                nev: "Árnika (Hegyi árnika)",
+                latinNev: "Arnica montana",
+                drog: "Arnicae flos",
+                hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Keserűanyagok"],
+                terapia: ["Külsőleges", "Szív- és érrendszer"],
+                gyujtes: "Június – Július (teljesen kinyílt fészekvirágzat)",
+                hatoanyagok: ["Szeszkviterpén-laktonok (helenalin)", "Flavonoidok", "Illóolaj", "Karotinoidok"],
+                hatas: "Kizárólag külsőleg: vérömlenyek felszívódását gyorsító, zúzódás-, rándulás- és gyulladáscsökkentő, fertőtlenítő.",
+                elkeszites: "Tinktúra formájában (5-10-szeres hígításban borogatásra) vagy kenőcsként. Belsőleg mérgező (szívbénító)! Nyílt sebbe nem kerülhet.",
+                hagyomany: "Az alpesi pásztorok 'esésfűnek' nevezték, mert esések, rándulások után azonnal bedörzsölték vele a fájó végtagot."
+            },
+            {
+                nev: "Bazsalikom (Kerti bazsalikom)",
+                latinNev: "Ocimum basilicum",
+                drog: "Basilici herba",
+                hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer", "Idegrendszer", "Légutak"],
+                gyujtes: "Július – Szeptember (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Illóolaj (linalool, esztragol, eugenol)", "Cseranyagok", "Flavonoidok", "Szaponinok"],
+                hatas: "Étvágyjavító, szélhajtó, gyomorerősítő, enyhe nyugtató és köhögéscsillapító.",
+                elkeszites: "Forrázat (1 teáskanál/csésze, lefedve 10 percig állni hagyni az illóolajok miatt).",
+                hagyomany: "Neve a görög 'baszileusz' (király) szóból ered; az ókorban királyi kenőcsök alapanyaga és a szív vidámítója volt."
+            },
+            {
+                nev: "Benedekfű (Áldott bárcs)",
+                latinNev: "Cnicus benedictus",
+                drog: "Cardui benedicti herba",
+                hatoanyagCsoportok: ["Keserűanyagok", "Cseranyagok", "Illóolajok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Június – Augusztus (virágzó felső hajtások, kesztyűben!)",
+                hatoanyagok: ["Knicin (szeszkviterpén-lakton keserűanyag)", "Cseranyagok", "Nyálkaanyag", "Illóolaj"],
+                hatas: "Erős keserűanyag-tartalma révén fokozza a nyál-, gyomornedv- és epetermelést, javítja az emésztést.",
+                elkeszites: "Forrázat (1 teáskanál/csésze, étkezés előtt 30 perccel fogyasztva). Nagy adagban hánytató hatású.",
+                hagyomany: "A középkori kolostorokban 'áldott bogáncsként' tisztelték, és a pestis elleni szerek egyik fő alkotójaként tartották számon."
+            },
+            {
+                nev: "Bíbor kasvirág",
+                latinNev: "Echinacea purpurea",
+                drog: "Echinaceae purpureae herba / radix",
+                hatoanyagCsoportok: ["Poliszacharidok", "Illóolajok", "Flavonoidok"],
+                terapia: ["Immunrendszer", "Légutak"],
+                gyujtes: "Nyár vége (virágzó hajtás), Ősz (gyökér)",
+                hatoanyagok: ["Alkilamidok", "Kávésav-származékok (cikóriasav)", "Immunstimuláns poliszacharidok", "Illóolaj"],
+                hatas: "Nem specifikus immunerősítő, fokozza a fehérvérsejtek fagocita aktivitását, lerövidíti a légúti fertőzéseket.",
+                elkeszites: "Alkoholos kivonat (tinktúra) vagy főzet formájában kúraszerűen (maximum 6-8 hétig folyamatosan).",
+                hagyomany: "Az észak-amerikai préri indiánok legsokoldalúbb gyógynövénye volt kígyómarástól a fertőzésekig."
+            },
+            {
+                nev: "Borsmenta",
+                latinNev: "Mentha x piperita",
+                drog: "Menthae piperitae folium",
+                hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer", "Idegrendszer", "Légutak"],
+                gyujtes: "Június – Augusztus (virágzás előtt vagy kezdetén)",
+                hatoanyagok: ["Illóolaj (35-55% mentol, menton)", "Rozmaringsav (cseranyag)", "Flavonoidok"],
+                hatas: "Simaizom-görcsoldó, epehajtó, szélhajtó, hányinger-csillapító, hűsítő és helyi érzéstelenítő.",
+                elkeszites: "Forrázat (lefedve 10 percig). Reflux esetén ellazítja a gyomorszájat, így ronthatja a tüneteket; csecsemőknél a mentol légzésbénulást okozhat!",
+                hagyomany: "Már az ókori egyiptomi sírokban is találtak szárított mentalevelet; Plinius szerint illata élénkíti az elmét."
+            },
+            {
+                nev: "Búzavirág (Kék búzavirág)",
+                latinNev: "Centaurea cyanus",
+                drog: "Cyani flos",
+                hatoanyagCsoportok: ["Flavonoidok", "Keserűanyagok", "Antociánok"],
+                terapia: ["Külsőleges", "Emésztőrendszer"],
+                gyujtes: "Június – Július (csak a kék szélső sugárvirágok)",
+                hatoanyagok: ["Antocián-glikozidok (cianin)", "Flavonoidok", "Keserűanyagok (knicin)", "Nyálkaanyag"],
+                hatas: "Szemgyulladás és kötőhártya-irritáció elleni borogató, enyhe vízhajtó, étvágyjavító és teakeverékek szépítője.",
+                elkeszites: "Forrázat (szemborogatáshoz steril gézen átszűrve, langyosan alkalmazva).",
+                hagyomany: "A néphit szerint a kék szemű emberek szemgyulladására a kék búzavirág a leghatásosabb gyógyír (szignatúra-tan)."
+            },
+            {
+                nev: "Cickafark (Közönséges cickafark)",
+                latinNev: "Achillea millefolium / A. collina",
+                drog: "Millefolii herba / flos",
+                hatoanyagCsoportok: ["Illóolajok", "Keserűanyagok", "Flavonoidok", "Cseranyagok"],
+                terapia: ["Emésztőrendszer", "Női bajok", "Külsőleges"],
+                gyujtes: "Június – Szeptember (virágzó hajtás, napsütésben)",
+                hatoanyagok: ["Illóolaj (proazulénből képződő kamazulén)", "Szeszkviterpén-laktonok (achillein)", "Flavonoidok", "Cseranyagok"],
+                hatas: "Gyulladáscsökkentő, görcsoldó, étvágyjavító, epehajtó, vérzéscsillapító és kismedencei keringést szabályozó.",
+                elkeszites: "Forrázat (1 teáskanál/csésze). Ülőfürdőként is kiváló nőgyógyászati panaszokra.",
+                hagyomany: "Nevét Akhilleuszról kapta, aki a trójai háborúban katonái sebeit gyógyította vele ('katonafű')."
+            },
+            {
+                nev: "Citromfű (Orvosi citromfű)",
+                latinNev: "Melissa officinalis",
+                drog: "Melissae folium",
+                hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
+                terapia: ["Idegrendszer", "Emésztőrendszer"],
+                gyujtes: "Június – Augusztus (virágzás előtt, levelek)",
+                hatoanyagok: ["Illóolaj (citrál, citronellál, geraniol)", "Rozmaringsav", "Flavonoidok", "Triterpének"],
+                hatas: "Idegnyugtató, elalvást segítő, szívidegesség-csillapító, vírusellenes (herpesz) és emésztőrendszeri görcsoldó.",
+                elkeszites: "Forrázat (1-2 teáskanál/csésze, lefedve 10 percig állni hagyni).",
+                hagyomany: "Paracelsus az 'élet elixírjének' nevezte; a karmelita apácák híres 'karmelitavizének' fő alapanyaga."
+            },
+            {
+                nev: "Csalán (Nagy csalán)",
+                latinNev: "Urtica dioica",
+                drog: "Urticae folium / radix",
+                hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Szterolok"],
+                terapia: ["Húgyutak", "Emésztőrendszer", "Külsőleges"],
+                gyujtes: "Tavasz – Nyár (fiatal levelek), Ősz (gyökér)",
+                hatoanyagok: ["Flavonoidok", "Kovasav", "Káliumsók", "Klorofill", "Béta-szitoszterol (gyökérben)"],
+                hatas: "Erős vízhajtó és vértisztító (köszvény, reuma ellen), roboráló; a gyökere jóindulatú prosztata-megnagyobbodás elleni.",
+                elkeszites: "Forrázat a levélből (kúraszerűen 4-6 hétig, utána szünet), főzet a gyökérből.",
+                hagyomany: "A római katonák csalánnal csapkodták a tagjaikat ('urtikáció'), hogy a hideg északi tartományokban serkentsék a vérkeringést."
+            },
+            {
+                nev: "Csarab (Közönséges csarab)",
+                latinNev: "Calluna vulgaris",
+                drog: "Callunae herba",
+                hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Fenolglikozidok"],
+                terapia: ["Húgyutak"],
+                gyujtes: "Augusztus – Szeptember (virágzó hajtásvég)",
+                hatoanyagok: ["Arbutin (hidrokinon-glikozid)", "Flavonoidok (kvercitrin)", "Cseranyagok", "Kovasav"],
+                hatas: "Húgyúti fertőtlenítő, vízhajtó, enyhe nyugtató és vértisztító.",
+                elkeszites: "Forrázat vagy rövid főzet (lúgos vizeletben hatékonyabb a hidrokinon felszabadulása miatt).",
+                hagyomany: "A skót és kelta hagyományban a szerencse növénye, emellett a komló előtt sörfőzéshez ('heather ale') használták."
+            },
+            {
+                nev: "Csipkerózsa (Vadrózsa)",
+                latinNev: "Rosa canina",
+                drog: "Cynosbati pseudofructus",
+                hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok"],
+                terapia: ["Immunrendszer", "Húgyutak"],
+                gyujtes: "Szeptember – Október (az első fagyok előtt, keményen és pirosan)",
+                hatoanyagok: ["C-vitamin (aszkorbinsav, akár 0,5-1%)", "Karotinoidok (likopin, béta-karotin)", "Pektin", "Flavonoidok", "Gyümölcssavak"],
+                hatas: "Immunerősítő, roboráló, érfalvédő és enyhe vízhajtó.",
+                elkeszites: "Kizárólag HIDEG vagy langyos (max. 50°C-os) vizes áztatással (6-8 órán át), mert a forrázás tönkreteszi a C-vitamint! A szőrös magokat alaposan le kell szűrni.",
+                hagyomany: "A második világháborúban a déligyümölcs-hiány miatt a csipkebogyó-gyűjtés volt a lakosság fő C-vitamin-forrása."
+            },
+            {
+                nev: "Dió (Közönséges dió)",
+                latinNev: "Juglans regia",
+                drog: "Juglandis folium",
+                hatoanyagCsoportok: ["Cseranyagok", "Flavonoidok"],
+                terapia: ["Külsőleges", "Emésztőrendszer"],
+                gyujtes: "Június – Július (ép, egészséges levéllemezek levélnyél nélkül)",
+                hatoanyagok: ["Ellagitannin típusú cseranyagok (10%)", "Juglon (naftokinon-származék)", "Flavonoidok", "Illóolaj"],
+                hatas: "Erős összehúzó, gyulladáscsökkentő, antibakteriális és gombaellenes; külsőleg bőrbetegségekre, izzadás ellen, belsőleg hasmenésre.",
+                elkeszites: "Forrázat vagy főzet (borogatásra, ülőfürdőre, toroköblögetésre).",
+                hagyomany: "A szignatúra-tan egyik legismertebb példája: a dióbél az emberi agyra emlékeztet, ezért agyerősítőnek tartották."
+            },
+            {
+                nev: "Édesgyökér (Igazi édesgyökér)",
+                latinNev: "Glycyrrhiza glabra",
+                drog: "Liquiritiae radix",
+                hatoanyagCsoportok: ["Szaponinok", "Flavonoidok", "Poliszacharidok"],
+                terapia: ["Légutak", "Emésztőrendszer"],
+                gyujtes: "Ősz (3-4 éves növény gyökere és tarackja)",
+                hatoanyagok: ["Glicirrizin (triterpén-szaponin, 50-szer édesebb a cukornál)", "Likviritin (flavonoid)", "Kumarinok"],
+                hatas: "Kiváló köptető, nyákoldó, gyomor- és nyombélfekély-gyógyító, gyulladáscsökkentő és vírusellenes.",
+                elkeszites: "Főzet (1 teáskanál/csésze). Magas vérnyomás, szívbetegség és káliumhiány esetén TILOS (ál-aldoszteronizmust okoz, visszatartja a nátriumot és vizet)!",
+                hagyomany: "Tutanhamon fáraó sírjában is találtak édesgyökeret; az ókori görögök asztma és szomjúság ellen rágcsálták."
+            },
+            {
+                nev: "Édeskömény",
+                latinNev: "Foeniculum vulgare",
+                drog: "Foeniculi fructus",
+                hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Kumarinok"],
+                terapia: ["Emésztőrendszer", "Légutak"],
+                gyujtes: "Augusztus – Szeptember (érett ikerkaszat termés)",
+                hatoanyagok: ["Illóolaj (transz-anetol, fenkon, esztragol)", "Zsíros olaj", "Flavonoidok"],
+                hatas: "Kiváló szélhajtó, bélgörcsoldó, nyákoldó köptető és tejelválasztást fokozó.",
+                elkeszites: "Forrázat (frissen megtört termésből, 10 percig lefedve áztatva).",
+                hagyomany: "A középkorban Szent János éjszakáján az ajtó fölé akasztották, hogy távol tartsa a gonosz szellemeket; böjtöléskor az éhségérzetet csillapították vele."
+            },
+            {
+                nev: "Egybibés galagonya",
+                latinNev: "Crataegus monogyna",
+                drog: "Crataegi folium cum flore",
+                hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Triterpének"],
+                terapia: ["Szív- és érrendszer", "Idegrendszer"],
+                gyujtes: "Április – Május (virágos hajtásvég), Ősz (termés)",
+                hatoanyagok: ["Oligomer procianidinek (OPC)", "Flavonoidok (hiperozid, vitexin)", "Triterpénsavak"],
+                hatas: "Javítja a szívizom vérellátását és oxigénellátását, szabályozza a szívritmust, enyhén csökkenti a vérnyomást.",
+                elkeszites: "Forrázat (napi 2-3 csésze, legalább 4-6 hétig kúraszerűen, mert hatása lassan épül fel).",
+                hagyomany: "A kelta és európai hagyományban a szív erejének és a védelemnek a szent cserjéje."
+            },
+            {
+                nev: "Erdei mályva (Papsajt)",
+                latinNev: "Malva sylvestris",
+                drog: "Malvae folium / flos",
+                hatoanyagCsoportok: ["Nyálkaanyagok", "Antociánok", "Flavonoidok"],
+                terapia: ["Légutak", "Emésztőrendszer", "Külsőleges"],
+                gyujtes: "Június – Augusztus (levél és virág)",
+                hatoanyagok: ["Savanyú nyálkaanyagok (8-10%)", "Malvin (antocián)", "Flavonoidok", "Cseranyagok"],
+                hatas: "Nyálkahártya-bevonó, száraz köhögést és rekedtséget csillapító, gyomor- és bélgyulladást enyhítő.",
+                elkeszites: "Langyos vagy hideg vizes áztatással (2-3 óra) kímélhető legjobban a nyálkaanyag.",
+                hagyomany: "Kerek, lapos termését ('papsajt') a falusi gyerekek évszázadok óta csemegeként rágcsálták."
+            },
+            {
+                nev: "Ezerjófű (Kis ezerjófű)",
+                latinNev: "Centaurium erythraea",
+                drog: "Centaurii herba",
+                hatoanyagCsoportok: ["Keserűanyagok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Július – Augusztus (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Szekoiridoid keserűanyagok (szverciamarin, genciopikrozid, centapikrin)", "Xantonok", "Flavonoidok"],
+                hatas: "Tiszta keserűanyag (amara pura): fokozza a gyomornedv- és epetermelést, étvágyjavító és májműködést serkentő.",
+                elkeszites: "Forrázat vagy hideg áztatás (étkezés előtt fél órával, édesítés nélkül!). Gyomorfekély esetén ellenjavallt.",
+                hagyomany: "Nevét Kheirón kentaurról kapta, aki a görög mitológiában a gyógyítás mestere volt; hazánkban védett, csak termesztett drog használható!"
+            },
+            {
+                nev: "Fehér árvacsalán",
+                latinNev: "Lamium album",
+                drog: "Lamii albi flos / herba",
+                hatoanyagCsoportok: ["Nyálkaanyagok", "Cseranyagok", "Flavonoidok", "Szaponinok"],
+                terapia: ["Női bajok", "Légutak", "Húgyutak"],
+                gyujtes: "Május – Július (a fehér párta a csésze nélkül kicsípve)",
+                hatoanyagok: ["Iridoid-glikozidok (lamalbid)", "Nyálkaanyagok", "Cseranyagok", "Szaponinok", "Flavonoidok"],
+                hatas: "Nőgyógyászati gyulladáscsökkentő (fehérfolyás ellen), nyákoldó légúti hurutokban és enyhe húgyúti fertőtlenítő.",
+                elkeszites: "Forrázat (1-2 teáskanál virág/csésze).",
+                hagyomany: "Nem csíp, mint a nagy csalán – a népi gyógyászatban a nők egyik legfontosabb gyógynövényeként tartották számon."
+            },
+            {
+                nev: "Fehér fagyöngy",
+                latinNev: "Viscum album",
+                drog: "Visci stipes",
+                hatoanyagCsoportok: ["Poliszacharidok", "Flavonoidok"],
+                terapia: ["Szív- és érrendszer", "Immunrendszer"],
+                gyujtes: "November – Március (leveles, vékony hajtások, bogyók nélkül!)",
+                hatoanyagok: ["Viszkotoxinok (polipeptidek)", "Lektinek", "Flavonoidok", "Biogén aminok"],
+                hatas: "Vérnyomáscsökkentő, érelmeszesedést gátló, immunmoduláns (injekciós készítményekben daganatterápiás kiegészítő).",
+                elkeszites: "Kizárólag HIDEG vizes áztatással (12 órán át szobahőmérsékleten), mert a főzés elbontja a hatóanyagait!",
+                hagyomany: "A druidák szent növénye, amelyet arany sarlóval vágtak le tölgyfáról úgy, hogy ne érjen földet."
+            },
+            {
+                nev: "Fehér nyír (Bibircses nyír)",
+                latinNev: "Betula pendula",
+                drog: "Betulae folium",
+                hatoanyagCsoportok: ["Flavonoidok", "Szaponinok", "Illóolajok"],
+                terapia: ["Húgyutak", "Külsőleges"],
+                gyujtes: "Május – Június (fiatal, még ragacsos levelek)",
+                hatoanyagok: ["Flavonoidok (hiperozid, kvercitrin)", "Triterpén-szaponinok", "Illóolaj", "Káliumsók"],
+                hatas: "Kiváló vesekímélő vízhajtó (átöblítő terápia vesehomok és húgyúti fertőzések esetén), reumaellenes.",
+                elkeszites: "Forrázat (1 evőkanál/csésze, bőséges folyadékbevitel mellett). Szív- vagy veseelégtelenség okozta ödéma esetén tilos!",
+                hagyomany: "Az északi népek 'életfája'; tavaszi nedvét (viricét) vértisztító és roboráló italként csapolták."
+            },
+            {
+                nev: "Fehér üröm",
+                latinNev: "Artemisia absinthium",
+                drog: "Absinthii herba",
+                hatoanyagCsoportok: ["Keserűanyagok", "Illóolajok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Július – Augusztus (virágzó hajtásvég)",
+                hatoanyagok: ["Abszintin, artabszin (rendkívül keserű szeszkviterpén-laktonok)", "Illóolaj (tujon, kamazulén)", "Flavonoidok"],
+                hatas: "Az egyik legerősebb keserűanyag-tartalmú gyomorerősítő, epehajtó, étvágyjavító és bélféregűző.",
+                elkeszites: "Forrázat (csipetnyi mennyiség, max. 1-2 hétig kúraszerűen!). A tujon idegméreg, ezért túladagolása és tartós használata tilos!",
+                hagyomany: "Nevét Artemisz istennőről kapta; a 19. századi művészek hírhedt italának, az abszintnak a névadó alapanyaga."
+            },
+            {
+                nev: "Fekete áfonya",
+                latinNev: "Vaccinium myrtillus",
+                drog: "Myrtilli fructus / folium",
+                hatoanyagCsoportok: ["Cseranyagok", "Antociánok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer", "Szív- és érrendszer"],
+                gyujtes: "Július – Augusztus (érett termés), Nyár (levél)",
+                hatoanyagok: ["Katekines cseranyagok (5-10%)", "Antociánok (mirtillin)", "Flavonoidok", "Pektin"],
+                hatas: "A szárított termés kiváló hasmenés elleni szer; az antociánok védik a hajszálereket és javítják a szem ideghártyájának keringését.",
+                elkeszites: "Főzet a szárított bogyóból (10 perc forralás hasmenés ellen; a friss bogyó viszont enyhén hashajtó!).",
+                hagyomany: "A második világháborúban a brit pilóták feketeáfonya-lekvárt ettek éjszakai bevetések előtt a látásélesség javítására."
+            },
+            {
+                nev: "Fekete bodza",
+                latinNev: "Sambucus nigra",
+                drog: "Sambuci flos",
+                hatoanyagCsoportok: ["Flavonoidok", "Illóolajok", "Nyálkaanyagok"],
+                terapia: ["Légutak", "Immunrendszer"],
+                gyujtes: "Május – Június (teljesen kinyílt virágzat száraz időben)",
+                hatoanyagok: ["Flavonoidok (rutin, izokvercitrin, szambucin)", "Fenolsavak", "Nyálkaanyag", "Illóolaj"],
+                hatas: "Kiváló izzasztó, lázcsillapító, köptető és immunerősítő meghűléses betegségekben.",
+                elkeszites: "Forrázat (forrón fogyasztva izzasztó hatású). A nyers, éretlen bogyó és a levél szambunigrin ciánglikozidot tartalmaz, ezért nyersen enyhén mérgező!",
+                hagyomany: "A germán és magyar néphitben a bodzabokorban jóindulatú védőszellemek laktak, ezért kivágását balszerencsének tartották."
+            },
+            {
+                nev: "Fekete nadálytő",
+                latinNev: "Symphytum officinale",
+                drog: "Symphyti radix",
+                hatoanyagCsoportok: ["Nyálkaanyagok", "Cseranyagok", "Alkaloidok"],
+                terapia: ["Külsőleges"],
+                gyujtes: "Kora tavasz vagy Ősz (gyökér)",
+                hatoanyagok: ["Allantoin (sejtregeneráló)", "Nyálkaanyagok", "Rozmaringsav", "Pirrolizidin-alkaloidok"],
+                hatas: "Kizárólag külsőleg: csonttörések, zúzódások, rándulások, ízületi gyulladások gyógyulását gyorsítja.",
+                elkeszites: "Pépes borogatás, tinktúra vagy krém. Belsőleg fogyasztani TILOS a májkárosító pirrolizidin-alkaloidok miatt!",
+                hagyomany: "Neve a görög 'szümphüo' (összeforrasztani) szóból ered; a népi gyógyászatban 'forrasztófűként' ismert."
+            },
+            {
+                nev: "Fekete ribiszke",
+                latinNev: "Ribes nigrum",
+                drog: "Ribis nigri folium",
+                hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Illóolajok"],
+                terapia: ["Húgyutak", "Szív- és érrendszer"],
+                gyujtes: "Június – Július (teljesen kifejlett, egészséges levelek)",
+                hatoanyagok: ["Flavonoidok (rutin, kvercetin)", "Proantocianidinek", "Illóolaj", "C-vitamin (bogyóban)"],
+                hatas: "Vízhajtó, reuma- és köszvényellenes (fokozza a húgysav ürítését), gyulladáscsökkentő.",
+                elkeszites: "Forrázat (1 evőkanál aprított levél/csésze, napi 2-3 alkalommal).",
+                hagyomany: "A 18. századi Franciaországban a fekete ribiszkét 'az élet meghosszabbítójának' nevezték és elixírt készítettek belőle."
+            },
+            {
+                nev: "Fekete üröm",
+                latinNev: "Artemisia vulgaris",
+                drog: "Artemisiae herba",
+                hatoanyagCsoportok: ["Illóolajok", "Keserűanyagok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer", "Női bajok"],
+                gyujtes: "Július – Augusztus (virágzó felső hajtásvég)",
+                hatoanyagok: ["Illóolaj (cineol, kámfor, tujon - kevesebb mint a fehér ürömben)", "Szeszkviterpén-laktonok", "Flavonoidok"],
+                hatas: "Étvágyjavító, epehajtó, görcsoldó és menstruációt megindító; ázsiai rokona a moxaterápia alapanyaga.",
+                elkeszites: "Forrázat (1 teáskanál/csésze). Terhesség alatt szigorúan tilos (méhösszehúzó)!",
+                hagyomany: "A római katonák a sarujukba tették menetelés előtt, hogy ne fáradjon el a lábuk; Szent János-éji varázsnövényként is tisztelték."
+            },
+            {
+                nev: "Füstikefű (Orvosi füstike)",
+                latinNev: "Fumaria officinalis",
+                drog: "Fumariae herba",
+                hatoanyagCsoportok: ["Alkaloidok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Május – Július (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Izokinolin-alkaloidok (protopin, fumarin)", "Flavonoidok", "Fumársav"],
+                hatas: "Amfokoleretikus epeszabályozó: ha kevés az epe, fokozza a termelését, ha túl sok, csökkenti; oldja az epeutak görcsét.",
+                elkeszites: "Forrázat (1 teáskanál/csésze, étkezés előtt 30 perccel, kúraszerűen max. 2-3 hétig).",
+                hagyomany: "Neve a latin 'fumus terrae' (föld füstje) kifejezésből ered, mert hamvas levelei távolról füstfelhőre emlékeztetnek."
+            },
+            {
+                nev: "Fűzike (Kisvirágú fűzike)",
+                latinNev: "Epilobium parviflorum",
+                drog: "Epilobii herba",
+                hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Szterolok"],
+                terapia: ["Húgyutak"],
+                gyujtes: "Június – Augusztus (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Enotein B (makrociklusos ellagitannin)", "Flavonoidok (miricitrin)", "Béta-szitoszterol"],
+                hatas: "Gátolja az 5-alfa-reduktáz enzimet, csökkenti a jóindulatú prosztata-megnagyobbodás tüneteit és a húgyúti gyulladást.",
+                elkeszites: "Forrázat (napi 2 csésze: reggel éhgyomorra és este lefekvés előtt fél órával).",
+                hagyomany: "Maria Treben tette világszerte ismertté, mint a férfiak prosztatabántalmainak alapvető gyógynövényét."
+            },
+            {
+                nev: "Gilisztaűző varádics",
+                latinNev: "Tanacetum vulgare",
+                drog: "Tanaceti flos / herba",
+                hatoanyagCsoportok: ["Illóolajok", "Keserűanyagok", "Flavonoidok"],
+                terapia: ["Külsőleges"],
+                gyujtes: "Július – Szeptember (virágzat)",
+                hatoanyagok: ["Illóolaj (magas béta-tujon tartalom!)", "Partenolid (szeszkviterpén-lakton)", "Flavonoidok"],
+                hatas: "Rovarriasztó, külsőleg parazitaellenes és reumaellenes bedörzsölő.",
+                elkeszites: "Belsőleges használata a magas tujontartalom (ideg- és májkárosító hatás) miatt ma már ELLENJAVALLT! Csak külsőleg vagy rovarűzőként használható.",
+                hagyomany: "Régen húsok tartósítására és molyűzőként használták; szárított virága évekig megtartja élénksárga színét."
+            },
+            {
+                nev: "Görögszéna (Görög lepkeszeg)",
+                latinNev: "Trigonella foenum-graecum",
+                drog: "Foenugraeci semen",
+                hatoanyagCsoportok: ["Nyálkaanyagok", "Szaponinok", "Alkaloidok"],
+                terapia: ["Emésztőrendszer", "Külsőleges"],
+                gyujtes: "Augusztus (érett hüvelyekből kifejtett mag)",
+                hatoanyagok: ["Galaktomannán nyálkaanyag (25-40%)", "Szteroid-szaponinok (diozgenin)", "Trigonellin", "Fehérjék"],
+                hatas: "Roboráló, étvágyjavító, vércukor- és koleszterinszint-csökkentő, tejelválasztást fokozó; külsőleg kelések érlelésére.",
+                elkeszites: "Őrleményként (vízbe/joghurtba keverve) vagy meleg pépes borogatásként külsőleg.",
+                hagyomany: "Már az ókori Egyiptomban használták; Nagy Károly császár elrendelte termesztését a birodalmi kertekben."
+            },
+            {
+                nev: "Gyermekláncfű (Pitypang)",
+                latinNev: "Taraxacum officinale",
+                drog: "Taraxaci radix cum herba",
+                hatoanyagCsoportok: ["Keserűanyagok", "Flavonoidok", "Poliszacharidok"],
+                terapia: ["Emésztőrendszer", "Húgyutak"],
+                gyujtes: "Tavasz (levél, virág), Ősz (gyökér)",
+                hatoanyagok: ["Szeszkviterpén-lakton keserűanyagok (taraxacin)", "Inulin (ősszel akár 40%)", "Flavonoidok", "Kálium"],
+                hatas: "Erős epehajtó, májműködést serkentő, étvágyjavító és káliumpótló vízhajtó (nem üríti ki a káliumot).",
+                elkeszites: "Főzet a gyökérből (5 perc forralás), forrázat a levélből.",
+                hagyomany: "Tudományos neve a görög 'taraxosz' (zavar) és 'akosz' (gyógyszer) szavakból áll össze."
+            },
+            {
+                nev: "Gyömbérgyökerű szegfűszeg (Erdei gyömbérgyökér)",
+                latinNev: "Geum urbanum",
+                drog: "Gei urbani rhizoma",
+                hatoanyagCsoportok: ["Cseranyagok", "Illóolajok", "Keserűanyagok"],
+                terapia: ["Emésztőrendszer", "Külsőleges"],
+                gyujtes: "Ősz vagy Tavasz (gyökértörzs)",
+                hatoanyagok: ["Ellagitannin és katekines cseranyagok (10-20%)", "Gein glikozid (ebből enzimesen eugenol szabadul fel)", "Keserűanyag"],
+                hatas: "Erős összehúzó, hasmenés elleni, gyomor- és bélhurut-csillapító, fogínygyulladás elleni öblögető.",
+                elkeszites: "Főzet (1 teáskanál aprított gyökértörzs/csésze, 5 perc forralás).",
+                hagyomany: "Frissen megkapart gyökértörzse szegfűszeg illatú az eugenol miatt, ezért régen sör és bor fűszerezésére is használták."
+            },
+            {
+                nev: "Hársfa (Kislevelű és nagylevelű hárs)",
+                latinNev: "Tilia cordata / T. platyphyllos",
+                drog: "Tiliae flos",
+                hatoanyagCsoportok: ["Flavonoidok", "Nyálkaanyagok", "Illóolajok"],
+                terapia: ["Légutak", "Idegrendszer"],
+                gyujtes: "Június (teljesen kinyílt virágzat a murvalevéllel együtt)",
+                hatoanyagok: ["Flavonoidok (kvercitrin, tilirozid)", "Nyálkaanyagok", "Illóolaj (farnezol)", "Cseranyagok"],
+                hatas: "Izzasztó, lázcsillapító, köhögéscsillapító, nyálkahártya-nyugtató és enyhe idegnyugtató.",
+                elkeszites: "Forrázat (1-2 teáskanál/csésze, lefedve 10 percig). Az ezüsthárs (Tilia tomentosa) gyűjtése kerülendő a csillagszőrök irritáló hatása miatt!",
+                hagyomany: "A szláv és germán népek szent fája, a béke és a közösségi élet jelképe, amely alatt ítélkeztek és ünnepeltek."
+            },
+            {
+                nev: "Homoki szalmagyopár",
+                latinNev: "Helichrysum arenarium",
+                drog: "Helichrysi flos",
+                hatoanyagCsoportok: ["Flavonoidok", "Keserűanyagok", "Illóolajok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Július – Augusztus (teljesen ki nem nyílt virágzat)",
+                hatoanyagok: ["Flavonoidok (izoszaliperpozid, naringenin)", "Keserűanyagok", "Illóolaj", "Ftálidok"],
+                hatas: "Kifejezett epehajtó, májvédő, görcsoldó és emésztésserkentő.",
+                elkeszites: "Forrázat vagy rövid főzet (1 teáskanál/csésze).",
+                hagyomany: "Magyarországon védett faj! Gyógyászati célra kizárólag termesztett állományból származó drog használható."
+            },
+            {
+                nev: "Homoktövis",
+                latinNev: "Hippophae rhamnoides",
+                drog: "Hippophae fructus",
+                hatoanyagCsoportok: ["Flavonoidok", "Poliszacharidok"],
+                terapia: ["Immunrendszer", "Külsőleges", "Szív- és érrendszer"],
+                gyujtes: "Augusztus vége – Október (érett narancssárga álbogyók)",
+                hatoanyagok: ["C-vitamin (akár 200-800 mg/100g)", "Karotinoidok (béta-karotin, zeaxantin)", "E-vitamin", "Palmitoleinsav (omega-7)"],
+                hatas: "Kiemelkedő immunerősítő, roboráló, májvédő, hámosító és sugárvédő.",
+                elkeszites: "Hidegen préselt lé, velő vagy magolaj (a hőkezelés rontja a vitamintartalmát).",
+                hagyomany: "Tudományos neve ('Hippophae' = csillogó ló) onnan ered, hogy az ókori görögök a legyengült lovakat homoktövis-hajtással etették, amitől szőrük fényes lett."
+            },
+            {
+                nev: "Igazi édeskömény / Ánizs (Közönséges ánizs)",
+                latinNev: "Pimpinella anisum",
+                drog: "Anisi fructus",
+                hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Kumarinok"],
+                terapia: ["Légutak", "Emésztőrendszer"],
+                gyujtes: "Augusztus (érett termés)",
+                hatoanyagok: ["Illóolaj (80-95% transz-anetol, metil-kavikol)", "Kumarinok", "Flavonoidok"],
+                hatas: "Kiváló köptető (serkenti a légúti csillószőrök mozgását), szélhajtó, görcsoldó és tejelválasztást fokozó.",
+                elkeszites: "Forrázat (frissen megtört termésből, lefedve 10 percig).",
+                hagyomany: "Már Hippokratész is köhögés ellen ajánlotta; a rómaiak lakomák után ánizsos süteményt ('mustaceum') ettek az emésztés segítésére."
+            },
+            {
+                nev: "Iglicetövis (Tövises iglice)",
+                latinNev: "Ononis spinosa",
+                drog: "Ononidis radix",
+                hatoanyagCsoportok: ["Flavonoidok", "Szaponinok", "Illóolajok"],
+                terapia: ["Húgyutak"],
+                gyujtes: "Ősz (gyökér)",
+                hatoanyagok: ["Izoflavonoidok (ononín, formononetin)", "Onocerin (triterpén)", "Illóolaj", "Cseranyagok"],
+                hatas: "Kiváló vizelethajtó (átöblítő terápia vesehomok és húgyúti gyulladások esetén), köszvény- és reumaellenes.",
+                elkeszites: "Főzet (1 teáskanál aprított gyökér/csésze, 5 perc forralás, bőséges folyadékbevitel mellett). Szív- vagy veseelégtelenség okozta ödéma esetén tilos!",
+                hagyomany: "Mélyre hatoló, szívós gyökere miatt a népi gyógyászatban a makacs, elhúzódó húgyúti panaszok szereként tartották számon."
+            },
+            {
+                nev: "Kálmos (Orvosi kálmos)",
+                latinNev: "Acorus calamus",
+                drog: "Calami rhizoma",
+                hatoanyagCsoportok: ["Illóolajok", "Keserűanyagok", "Cseranyagok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Ősz vagy Kora tavasz (gyökértörzs)",
+                hatoanyagok: ["Illóolaj (akaron, béta-azaron)", "Keserűanyag (akorin)", "Cseranyagok", "Keményítő"],
+                hatas: "Erős gyomorerősítő, emésztésjavító, puffadáscsökkentő és étvágygerjesztő.",
+                elkeszites: "Forrázat vagy tinktúra. Csak alacsony béta-azaron tartalmú európai típus használható, kúraszerűen!",
+                hagyomany: "Ázsiából származó mocsári növény, amelyet a tatárjárás idején hurcoltak be Európába (víztisztító hatása miatt hordták magukkal)."
+            },
+            {
+                nev: "Kamilla (Orvosi székfű)",
+                latinNev: "Matricaria chamomilla / M. recutita",
+                drog: "Chamomillae anthodium",
+                hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Kumarinok", "Nyálkaanyagok"],
+                terapia: ["Emésztőrendszer", "Légutak", "Külsőleges"],
+                gyujtes: "Május – Június (teljesen kinyílt fészekvirágzat, száraz időben)",
+                hatoanyagok: ["Illóolaj (alfa-bizabolol, matricinból képződő kamazulén)", "Flavonoidok (apigenin)", "Kumarinok (herniarin, umbelliferon)", "Nyálkaanyagok"],
+                hatas: "Sokoldalú gyulladáscsökkentő, görcsoldó, szélhajtó, nyálkahártya-védő, antibakteriális és sebgyógyító.",
+                elkeszites: "Forrázat (1 evőkanál/csésze, lefedve 10 percig állni hagyni). Szemborogatásra ma már kerülik az esetleges fészkesvirágzat-allergia miatt.",
+                hagyomany: "Az alföldi szikesek világhírű magyar hungarikuma ('Hungarikum'), amelyet a népi gyógyászatban minden baj első számú gyógyírjaként tiszteltek."
+            },
+            {
+                nev: "Kankalin (Tavaszi kankalin)",
+                latinNev: "Primula veris",
+                drog: "Primulae radix / flos",
+                hatoanyagCsoportok: ["Szaponinok", "Flavonoidok"],
+                terapia: ["Légutak"],
+                gyujtes: "Tavasz (virág), Ősz (gyökér - csak termesztett állományból!)",
+                hatoanyagok: ["Triterpén-szaponinok (primulasav, 5-10% a gyökérben)", "Fenolglikozidok (primverin)", "Flavonoidok"],
+                hatas: "Erős nyákoldó és köptető (a szaponinok reflexesen fokozzák a hörgőváladék termelődését és hígulását).",
+                elkeszites: "Főzet a gyökérből (1 kávéskanál/csésze), forrázat a virágból. Magyarországon védett növény, vadon gyűjteni tilos!",
+                hagyomany: "Nevét onnan kapta, hogy tavasszal az elsők között nyílik ('primus' = első), alakja pedig kulcscsomóra emlékeztet ('Szent Péter kulcsa')."
+            },
+            {
+                nev: "Kapor (Kerti kapor)",
+                latinNev: "Anethum graveolens",
+                drog: "Anethi fructus / herba",
+                hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Kumarinok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Június – Július (hajtás), Augusztus – Szeptember (érett termés)",
+                hatoanyagok: ["Illóolaj (karvon, limonén, dillapiol)", "Flavonoidok", "Kumarinok"],
+                hatas: "Szélhajtó, görcsoldó, emésztésjavító, antibakteriális és szoptatós anyáknál tejelválasztást serkentő.",
+                elkeszites: "Forrázat (a termést felhasználás előtt enyhén meg kell törni, hogy az illóolaj kioldódjon).",
+                hagyomany: "Az ókori római gladiátorok ételébe keverték, mert úgy tartották, erőt és bátorságot ad."
+            },
+            {
+                nev: "Kerek repkény",
+                latinNev: "Glechoma hederacea",
+                drog: "Hederae terrestris herba",
+                hatoanyagCsoportok: ["Keserűanyagok", "Cseranyagok", "Illóolajok", "Flavonoidok"],
+                terapia: ["Légutak", "Emésztőrendszer"],
+                gyujtes: "Április – Június (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Glechomin (keserűanyag)", "Cseranyagok", "Illóolaj", "Rozmaringsav", "Kolin"],
+                hatas: "Légúti hurutoldó, köptető, emésztésjavító és gyulladáscsökkentő.",
+                elkeszites: "Forrázat (1 teáskanál/csésze).",
+                hagyomany: "A komló elterjedése előtt Európában kerek repkénnyel ízesítették és tartósították a sört ('alehoof')."
+            },
+            {
+                nev: "Kerti izsóp",
+                latinNev: "Hyssopus officinalis",
+                drog: "Hyssopi herba",
+                hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
+                terapia: ["Légutak", "Emésztőrendszer"],
+                gyujtes: "Június – Augusztus (virágzó hajtás)",
+                hatoanyagok: ["Illóolaj (pinokamfon, izopinokamfon)", "Cseranyagok (rozmaringsav)", "Flavonoidok (diozmin)", "Marrubiin"],
+                hatas: "Köptető, hörgőtágító, izzadásgátló, vérnyomást enyhén emelő és étvágyjavító.",
+                elkeszites: "Forrázat (1 teáskanál/csésze). Magas vérnyomás és epilepszia esetén kerülni kell!",
+                hagyomany: "Már a Bibliában is említett szent tisztító növény; a középkori kolostorkertek nélkülözhetetlen gyógyfűve."
+            },
+            {
+                nev: "Kerti kakukkfű",
+                latinNev: "Thymus vulgaris",
+                drog: "Thymi herba",
+                hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
+                terapia: ["Légutak", "Emésztőrendszer"],
+                gyujtes: "Május – Július (virágzó hajtás)",
+                hatoanyagok: ["Illóolaj (timol, karvakrol)", "Rozmaringsav", "Flavonoidok", "Triterpének"],
+                hatas: "Az egyik legerősebb természetes fertőtlenítő, köptető, hörgőgörcsoldó és emésztésserkentő.",
+                elkeszites: "Forrázat (1 teáskanál/csésze, lefedve 10 percig). Pajzsmirigy-alulműködés esetén nagy adagban óvatosság ajánlott.",
+                hagyomany: "Neve a görög 'thümosz' (bátorság, erő) szóból származik; a lovagok pajzsára kakukkfű-ágat hímeztek."
+            },
+            {
+                nev: "Kerti ruta",
+                latinNev: "Ruta graveolens",
+                drog: "Rutae herba",
+                hatoanyagCsoportok: ["Flavonoidok", "Illóolajok", "Kumarinok", "Alkaloidok"],
+                terapia: ["Szív- és érrendszer", "Emésztőrendszer"],
+                gyujtes: "Június – Július (virágzás előtt, kesztyűben!)",
+                hatoanyagok: ["Rutin (flavonoid-glikozid, akár 2%)", "Illóolaj (metil-nonil-keton)", "Furanokumarinok (bergaptén)", "Kinolin-alkaloidok"],
+                hatas: "Hajszálér-erősítő, vérnyomáscsökkentő, simaizom-görcsoldó és epehajtó.",
+                elkeszites: "Forrázat (csipetnyi mennyiség). Terhesség alatt szigorúan TILOS (vetélést okoz!), érintése pedig napsütésben súlyos bőrgyulladást (fotodermatitiszt) vált ki!",
+                hagyomany: "Az ókori Rómában a festők és vésnökök rutát ettek a látásuk élesítésére; innen ered a rutin (P-vitamin) elnevezése is."
+            },
+            {
+                nev: "Koriander (Kerti koriander)",
+                latinNev: "Coriandrum sativum",
+                drog: "Coriandri fructus",
+                hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Kumarinok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Augusztus (teljesen érett, világosbarna ikerkaszat termés)",
+                hatoanyagok: ["Illóolaj (60-70% linalool, pinén, geraniol)", "Zsíros olaj", "Flavonoidok", "Kumarinok"],
+                hatas: "Kiváló szélhajtó, puffadáscsökkentő, gyomor- és bélgörcsoldó, étvágyjavító és enyhe antibakteriális hatású.",
+                elkeszites: "Forrázat (1 teáskanál frissen megtört termés/csésze, 10 percig lefedve áztatva). Az éretlen termés kellemetlen poloskaszagú az aldehidek miatt.",
+                hagyomany: "Az egyik legrégebbi kultúrnövény; már az ókori egyiptomi orvosi papiruszokban és az Ezeregyéjszaka meséiben is szerepel."
+            },
+            {
+                nev: "Kökény",
+                latinNev: "Prunus spinosa",
+                drog: "Pruni spinosae flos / fructus",
+                hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Antociánok"],
+                terapia: ["Emésztőrendszer", "Húgyutak"],
+                gyujtes: "Április (virág), Október – November (megcsípett, érett termés)",
+                hatoanyagok: ["Flavonoidok (kempferol, kvercetin - virágban)", "Cseranyagok (termésben)", "Antociánok", "C-vitamin"],
+                hatas: "A virág enyhe hashajtó, vízhajtó és anyagcsere-fokozó; a fanyar termés viszont összehúzó és hasmenés elleni!",
+                elkeszites: "Forrázat a virágból; a termésből lekvár, szörp vagy főzet készíthető. A magja amigdalint (ciánglikozidot) tartalmaz!",
+                hagyomany: "A népi bölcsesség szerint a kökény két arca: 'virága hajt, bogyója fog'."
+            },
+            {
+                nev: "Kömény (Fűszerkömény)",
+                latinNev: "Carum carvi",
+                drog: "Carvi fructus",
+                hatoanyagCsoportok: ["Illóolajok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Július – Augusztus (teljesen érett ikerkaszat termés)",
+                hatoanyagok: ["Illóolaj (50-60% D-karvon, limonén)", "Zsíros olaj", "Flavonoidok"],
+                hatas: "Az egyik leghatékonyabb természetes szélhajtó, puffadáscsökkentő, gyomor- és bélrendszeri görcsoldó.",
+                elkeszites: "Forrázat (1 teáskanál frissen megtört termés/csésze, 10 percig lefedve áztatva).",
+                hagyomany: "A néphit szerint megóvja a háziállatokat és az embereket a rontástól, ezért kenyérbe sütve mindig tartottak otthon."
+            },
+            {
+                nev: "Körömvirág (Orvosi körömvirág)",
+                latinNev: "Calendula officinalis",
+                drog: "Calendulae flos",
+                hatoanyagCsoportok: ["Flavonoidok", "Szaponinok", "Illóolajok"],
+                terapia: ["Külsőleges", "Emésztőrendszer"],
+                gyujtes: "Június – Szeptember (teljesen kinyílt narancssárga virágzat)",
+                hatoanyagok: ["Triterpén-szaponinok (kalendulozidok)", "Flavonoidok", "Karotinoidok", "Illóolaj"],
+                hatas: "Hámosító, sebgyógyító, gyulladáscsökkentő, gombaellenes; belsőleg gyomor- és nyombélfekély esetén védő hatású.",
+                elkeszites: "Forrázat (belsőleg vagy borogatásra), illetve olajos kivonat / kenőcs külsőleg.",
+                hagyomany: "Nevét onnan kapta, hogy szinte minden hónap elsején ('kalendae') virágzik; az időjárás előrejelzésére is használták."
+            },
+            {
+                nev: "Közönséges aranyvessző",
+                latinNev: "Solidago virgaurea",
+                drog: "Solidaginis herba",
+                hatoanyagCsoportok: ["Flavonoidok", "Szaponinok", "Illóolajok"],
+                terapia: ["Húgyutak"],
+                gyujtes: "Július – Szeptember (virágzó felső hajtásvég)",
+                hatoanyagok: ["Flavonoidok (rutin, kvercitrin, leikarpozid)", "Triterpén-szaponinok", "Fenolglikozidok", "Illóolaj"],
+                hatas: "Az egyik leghatékonyabb vesekímélő vízhajtó, gyulladáscsökkentő és görcsoldó vesehomok, vesekő-megelőzés és húgyúti fertőzések esetén.",
+                elkeszites: "Forrázat (1-2 teáskanál/csésze, bőséges folyadékbevitel mellett). Szív- vagy veseelégtelenség okozta ödéma esetén ellenjavallt!",
+                hagyomany: "Tudományos neve ('Solidago' = szilárdítani, összeforrasztani) onnan ered, hogy a középkorban sebgyógyító növényként is nagy becsben tartották."
+            },
+            {
+                nev: "Közönséges bojtorján (Nagy bojtorján)",
+                latinNev: "Arctium lappa",
+                drog: "Bardanae radix",
+                hatoanyagCsoportok: ["Poliszacharidok", "Keserűanyagok", "Illóolajok"],
+                terapia: ["Emésztőrendszer", "Külsőleges", "Húgyutak"],
+                gyujtes: "Ősz (elsőéves növény gyökere)",
+                hatoanyagok: ["Inulin (akár 45-50%)", "Poliacetilének (arktiin - antibakteriális)", "Keserűanyagok", "Nyálkaanyag"],
+                hatas: "Vértisztító, epe- és vízhajtó, vércukorszint-csökkentő (inulin); külsőleg ekcéma, pikkelysömör és hajhullás ellen kiváló.",
+                elkeszites: "Főzet (1 evőkanál aprított gyökér/csésze, 5-10 perc forralás), vagy bojtorjángyökér-olaj fejbőrre.",
+                hagyomany: "Horoggal ellátott fészekpikkelyei adták az ötletet a tépőzár feltalálásához."
+            },
+            {
+                nev: "Közönséges boróka",
+                latinNev: "Juniperus communis",
+                drog: "Juniperi galbulus (fructus)",
+                hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Cseranyagok"],
+                terapia: ["Húgyutak", "Emésztőrendszer"],
+                gyujtes: "Ősz (második évben beérett, kékesfekete tobozbogyók)",
+                hatoanyagok: ["Illóolaj (alfa-pinén, terpinén-4-ol, mircén)", "Flavonoidok", "Cseranyagok", "Invertcukor (30%)"],
+                hatas: "Erős vizelethajtó (fokozza a vesék vérellátását), emésztésjavító, szélhajtó és reumaellenes.",
+                elkeszites: "Forrázat (enyhén megtört bogyókból, max. 3-4 hétig kúraszerűen!). Vesegyulladás és terhesség esetén szigorúan TILOS (veseizgató hatású)!",
+                hagyomany: "A népi hagyományban füstölőszerként használták járványok idején a levegő fertőtlenítésére, valamint a borovicska és a gin alapanyaga."
+            },
+            {
+                nev: "Közönséges komló",
+                latinNev: "Humulus lupulus",
+                drog: "Lupuli flos (strobulus)",
+                hatoanyagCsoportok: ["Keserűanyagok", "Illóolajok", "Flavonoidok"],
+                terapia: ["Idegrendszer", "Emésztőrendszer"],
+                gyujtes: "Augusztus – Szeptember (érett, de még nem széteső termős tobozok)",
+                hatoanyagok: ["Keserűsavak (humulon, lupulon - belőlük tároláskor 2-metil-3-butén-2-ol képződik)", "Illóolaj (mircén, humulén)", "Prenilflavonoidok (xantohumol - fitoösztrogén)"],
+                hatas: "Nyugtató, elalvást segítő, ideges gyomorpanaszokat enyhítő és étvágyjavító.",
+                elkeszites: "Forrázat (gyakran macskagyökérrel és citromfűvel kombinálva) vagy gyógynövénypárnába töltve.",
+                hagyomany: "A komlószedők körében már régóta megfigyelték, hogy a friss tobozok illata álmosságot okoz."
+            },
+            {
+                nev: "Közönséges vasfű",
+                latinNev: "Verbena officinalis",
+                drog: "Verbenae herba",
+                hatoanyagCsoportok: ["Keserűanyagok", "Flavonoidok", "Cseranyagok"],
+                terapia: ["Légutak", "Emésztőrendszer", "Idegrendszer"],
+                gyujtes: "Június – Augusztus (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Iridoid-glikozidok (verbenalin, hasztatozid)", "Kávésav-származékok (verbakozid)", "Flavonoidok", "Illóolaj"],
+                hatas: "Nyákoldó (különösen arcüreggyulladás esetén), epehajtó, étvágyjavító, enyhe nyugtató és tejelválasztást serkentő.",
+                elkeszites: "Forrázat (1-2 teáskanál/csésze). Terhesség alatt ellenjavallt (méhösszehúzó hatású lehet).",
+                hagyomany: "A kelták és a rómaiak legszentebb füve ('herba sacra'), amellyel oltárokat tisztítottak és békekötéseket pecsételtek meg."
+            },
+            {
+                nev: "Kukorica (Kukoricabajusz)",
+                latinNev: "Zea mays",
+                drog: "Maydis stigma",
+                hatoanyagCsoportok: ["Flavonoidok", "Szaponinok", "Cseranyagok"],
+                terapia: ["Húgyutak"],
+                gyujtes: "Július – Augusztus (a megtermékenyítés előtti, még üde bibeszálak)",
+                hatoanyagok: ["Káliumsók", "Szaponinok", "Flavonoidok (maizin)", "Cseranyagok", "Allantoin", "K-vitamin"],
+                hatas: "Kiváló, kíméletes vízhajtó (húgyúti homok, hólyaghurut és ödéma esetén), enyhe epehajtó.",
+                elkeszites: "Forrázat (1 evőkanál aprított bibeszál/csésze, napi 2-3 alkalommal).",
+                hagyomany: "A közép-amerikai indián kultúrák szent növénye; a bibeszálat húgyúti és vesebántalmakra már évszázadok óta alkalmazzák."
+            },
+            {
+                nev: "Kutyabenge",
+                latinNev: "Frangula alnus",
+                drog: "Frangulae cortex",
+                hatoanyagCsoportok: ["Antrakinonok", "Cseranyagok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Tavasz (fiatal ágak kérge – felhasználás előtt 1 évig tárolni vagy 100°C-on hőkezelni kell!)",
+                hatoanyagok: ["Antrakinon-glikozidok (glükofrangulin A és B, frangulin)", "Cseranyagok"],
+                hatas: "Erős vastagbél-izgató hashajtó (a hatás bevétel után 8-12 órával jelentkezik).",
+                elkeszites: "Főzet (csak szárított, érlelt kéregből, rövid ideig, max. 1-2 hétig!). A friss kéreg antron-tartalma heves hányást és bélgörcsöt okoz!",
+                hagyomany: "Fájából készítették a legjobb minőségű faszenet puskapor gyártásához ('puskaporfa')."
+            },
+            {
+                nev: "Lándzsás útifű",
+                latinNev: "Plantago lanceolata",
+                drog: "Plantaginis lanceolatae folium",
+                hatoanyagCsoportok: ["Nyálkaanyagok", "Cseranyagok", "Flavonoidok", "Keserűanyagok"],
+                terapia: ["Légutak", "Külsőleges"],
+                gyujtes: "Május – Szeptember (ép, foltmentes levelek, gyorsan szárítva, nehogy megbarnuljanak!)",
+                hatoanyagok: ["Nyálkaanyagok", "Iridoid-glikozidok (aukubin, katalpol - antibakteriális)", "Kovasav", "Cseranyagok", "Flavonoidok"],
+                hatas: "Kiváló nyálkahártya-bevonó, köhögéscsillapító, légúti fertőtlenítő; külsőleg rovarcsípésre, sebekre vérzéscsillapító.",
+                elkeszites: "Forrázat vagy szirup (friss levélből mézzel rétegezve). Az aukubin csak hideg vagy kíméletes feldolgozásnál marad sértetlen!",
+                hagyomany: "Az angolszász kilenc szent gyógynövény egyike ('a növények anyja'), amelyet utazók vízhólyagokra és sebekre tettek."
+            },
+            {
+                nev: "Len (Kultúrlen / Lenmag)",
+                latinNev: "Linum usitatissimum",
+                drog: "Lini semen",
+                hatoanyagCsoportok: ["Nyálkaanyagok", "Poliszacharidok"],
+                terapia: ["Emésztőrendszer", "Külsőleges"],
+                gyujtes: "Augusztus (érett toktermésből kicsépelt mag)",
+                hatoanyagok: ["Nyálkaanyagok (3-10% a maghéjban)", "Zsíros olaj (30-40%, alfa-linolénsav - omega-3)", "Lignánok (fitoösztrogének)", "Fehérjék"],
+                hatas: "Kíméletes térfogatnövelő hashajtó, gyomor- és bélnyálkahártya-védő; külsőleg meleg pépes borogatásként kelésekre.",
+                elkeszites: "Egész vagy durván tört magot bő folyadékkal (legalább 1:10 arányban) kell bevenni, különben bélelzáródást okozhat!",
+                hagyomany: "Tudományos neve ('usitatissimum' = leghasznosabb) jelzi, hogy az emberiség évezredek óta mind ruházatra, mind gyógyításra használja."
+            },
+            {
+                nev: "Lestyán",
+                latinNev: "Levisticum officinale",
+                drog: "Levistici radix",
+                hatoanyagCsoportok: ["Illóolajok", "Kumarinok"],
+                terapia: ["Húgyutak", "Emésztőrendszer"],
+                gyujtes: "Ősz (2-3 éves növény gyökértörzse)",
+                hatoanyagok: ["Illóolaj (alkil-ftálidok: ligusztilid, butilftálid)", "Kumarinok (bergaptén)", "Szerves savak"],
+                hatas: "Erős vizelethajtó, görcsoldó, szélhajtó és emésztésjavító.",
+                elkeszites: "Forrázat vagy rövid főzet (bőséges folyadékkal). Vesegyulladás és terhesség esetén ellenjavallt; fényérzékenyítő lehet!",
+                hagyomany: "A középkori kolostorkertek alapnövénye; jellegzetes levesfűszer-illata a ftálid vegyületektől származik."
+            },
+            {
+                nev: "Levendula (Közönséges / Francia levendula)",
+                latinNev: "Lavandula angustifolia",
+                drog: "Lavandulae flos",
+                hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok", "Kumarinok"],
+                terapia: ["Idegrendszer", "Emésztőrendszer", "Külsőleges"],
+                gyujtes: "Június – Július (a virágzás kezdetén, amikor az alsó virágok kinyíltak)",
+                hatoanyagok: ["Illóolaj (linalil-acetát, linalool - kámfort alig tartalmaz!)", "Rozmaringsav", "Kumarinok", "Flavonoidok"],
+                hatas: "Nyugtató, szorongásoldó, elalvást segítő, ideges gyomorpanaszokat enyhítő és antibakteriális.",
+                elkeszites: "Forrázat (1 teáskanál virág/csésze, lefedve 10 percig) vagy illóolajként párologtatva / fürdővízbe.",
+                hagyomany: "Neve a latin 'lavare' (mosni) igéből ered, mivel a rómaiak fürdővizüket illatosították vele; a tihanyi levendulás alapfaja."
+            },
+            {
+                nev: "Macskagyökér (Orvosi macskagyökér)",
+                latinNev: "Valeriana officinalis",
+                drog: "Valerianae radix",
+                hatoanyagCsoportok: ["Illóolajok", "Keserűanyagok", "Alkaloidok"],
+                terapia: ["Idegrendszer"],
+                gyujtes: "Ősz (gyökértörzs és járulékos gyökerek)",
+                hatoanyagok: ["Szeszkviterpének (valerénsav - gátolja a GABA lebomlását)", "Valepotriátok", "Illóolaj (bornil-acetát)", "Lignánok"],
+                hatas: "Természetes nyugtató, feszültségoldó, elalvást segítő (nappali álmosság nélkül) és ideges szívpanaszokat csillapító.",
+                elkeszites: "Hideg vizes áztatással (12 óra) vagy alacsony hőfokú forrázással (forralni tilos, mert elbomlanak a hatóanyagok!).",
+                hagyomany: "Jellegzetes szagát a száradáskor felszabaduló izovaleriánsav adja, amely ellenállhatatlanul vonzza a macskákat."
+            },
+            {
+                nev: "Majoránna (Kerti majoránna)",
+                latinNev: "Majorana hortensis / Origanum majorana",
+                drog: "Majoranae herba",
+                hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer", "Légutak"],
+                gyujtes: "Július – Szeptember (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Illóolaj (terpinén-4-ol, cisz-szabinénhidrát)", "Rozmaringsav (10%)", "Arbutin", "Flavonoidok"],
+                hatas: "Étvágyjavító, szélhajtó, gyomor- és bélgörcsoldó, epehajtó; külsőleg kenőcsként csecsemők és felnőttek náthájára.",
+                elkeszites: "Forrázat (1 teáskanál/csésze, lefedve 10 percig) vagy majoránnás vaj/kenőcs orr környékére.",
+                hagyomany: "A görög mitológiában Aphrodité szent növénye volt, a boldogság és a harmónia jelképe."
+            },
+            {
+                nev: "Máriatövis",
+                latinNev: "Silybum marianum",
+                drog: "Cardui mariani fructus",
+                hatoanyagCsoportok: ["Flavonoidok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Augusztus – Szeptember (érett kaszattermés)",
+                hatoanyagok: ["Szilimarin komplex (szilibinin, szilikrisztin, szilidianin - flavonolignánok)", "Zsíros olaj"],
+                hatas: "Májsejt-regeneráló, stabilizálja a májsejtek membránját, gátolja a méreganyagok bejutását és fokozza a fehérjeszintézist.",
+                elkeszites: "Mivel a szilimarin vízben rosszul oldódik, teának kevésbé hatékony – őrleményként (joghurtba/kefirbe keverve) vagy standardizált kivonatként ajánlott.",
+                hagyomany: "A legenda szerint leveleinek fehér márványozottsága Szűz Mária tejének cseppjeitől származik."
+            },
+            {
+                nev: "Martilapu (Közönséges martilapu)",
+                latinNev: "Tussilago farfara",
+                drog: "Farfarae folium",
+                hatoanyagCsoportok: ["Nyálkaanyagok", "Cseranyagok", "Flavonoidok", "Alkaloidok"],
+                terapia: ["Légutak"],
+                gyujtes: "Május – Június (fiatal, ép levelek)",
+                hatoanyagok: ["Savanyú nyálkaanyagok (7-10%)", "Cseranyagok", "Flavonoidok", "Nyomokban pirrolizidin-alkaloidok (szenkirkin)"],
+                hatas: "Kiváló köhögéscsillapító és nyálkahártya-bevonó makacs, száraz köhögés és rekedtség esetén.",
+                elkeszites: "Forrázat (max. 2-3 hétig kúraszerűen, évente legfeljebb 4-6 hétig a pirrolizidin-alkaloidok miatt!). Terhesség és szoptatás alatt tilos!",
+                hagyomany: "Tudományos neve ('Tussilago' = köhögésűző) évezredes légúti alkalmazására utal."
+            },
+            {
+                nev: "Medvehagyma",
+                latinNev: "Allium ursinum",
+                drog: "Allii ursini herba / bulbus",
+                hatoanyagCsoportok: ["Illóolajok", "Flavonoidok"],
+                terapia: ["Szív- és érrendszer", "Emésztőrendszer"],
+                gyujtes: "Március – Április (virágzás előtt, friss levelek – vigyázat, a mérgező gyöngyvirággal könnyen összetéveszthető!)",
+                hatoanyagok: ["Kéntartalmú vegyületek (alliinból keletkező allicin, ajoén)", "Flavonoidok", "C-vitamin", "Adenozin"],
+                hatas: "Vérnyomáscsökkentő, érelmeszesedést gátló, koleszterinszint-csökkentő és bélfertőtlenítő.",
+                elkeszites: "Frissen fogyasztva vagy alkoholos tinktúraként (a szárítás és hőkezelés elpusztítja az allicint!).",
+                hagyomany: "A néphit szerint a téli álomból ébredő barna medvék ezt legelik először, hogy megtisztítsák a gyomrukat és erejüket visszanyerjék."
+            },
+            {
+                nev: "Medveszőlő (Orvosi medveszőlő)",
+                latinNev: "Arctostaphylos uva-ursi",
+                drog: "Uvae ursi folium",
+                hatoanyagCsoportok: ["Fenolglikozidok", "Cseranyagok", "Flavonoidok"],
+                terapia: ["Húgyutak"],
+                gyujtes: "Nyár – Ősz (bőrnemű levelek – csak külföldről importált drog, hazánkban nem őshonos)",
+                hatoanyagok: ["Arbutin (hidrokinon-glikozid, 6-10%)", "Gallotannin típusú cseranyagok (15-20%)", "Flavonoidok"],
+                hatas: "Az egyik legerősebb természetes húgyúti fertőtlenítő (hólyaghurut és húgyúti fertőzések esetén).",
+                elkeszites: "Hideg vizes áztatással (12 óra) kevesebb cseranyag oldódik ki, így nem irritálja a gyomrot! Lúgos vizeletben hatékony (szódabikarbóna vagy növényi étrend mellett), max. 1 hétig kúraszerűen!",
+                hagyomany: "A magas cseranyagtartalma miatt régen bőrcserzésre is használták északi országokban."
+            },
+            {
+                nev: "Mezei zsurló",
+                latinNev: "Equisetum arvense",
+                drog: "Equiseti herba",
+                hatoanyagCsoportok: ["Flavonoidok", "Szaponinok"],
+                terapia: ["Húgyutak", "Külsőleges"],
+                gyujtes: "Június – Augusztus (meddő, zöld nyári hajtások – a mérgező mocsári zsurlótól pontosan el kell különíteni!)",
+                hatoanyagok: ["Kovasav (8-10%, részben vízoldékony szilikátok formájában)", "Flavonoidok (kvercetin, kempferol)", "Szaponinok", "Káliumsók"],
+                hatas: "Kiváló vizelethajtó, kötőszövet-, köröm- és hajerősítő, csontregenerációt segítő és vérzéscsillapító.",
+                elkeszites: "Főzet (10-15 perc főzés szükséges ahhoz, hogy a kovasav kioldódjon a sejtfalakból!).",
+                hagyomany: "Magas kovasav-tartalma miatt régen ónedények és fémek fényesítésére használták ('kannamosófű')."
+            },
+            {
+                nev: "Orbáncfű (Közönséges orbáncfű)",
+                latinNev: "Hypericum perforatum",
+                drog: "Hyperici herba",
+                hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Illóolajok"],
+                terapia: ["Idegrendszer", "Emésztőrendszer", "Külsőleges"],
+                gyujtes: "Június vége – Július (teljes virágzásban, a felső 20-25 cm-es hajtás)",
+                hatoanyagok: ["Hipericin, pszeudohipericin (naftodiantronok - vörös festékanyag)", "Hiperforin (floroglucin-származék)", "Flavonoidok (hiperozid, rutin)"],
+                hatas: "Enyhe és középsúlyos depresszió, szorongás elleni (szerotonin-, dopamin- és noradrenalin-visszavétel gátló); olaja sebgyógyító és égési sérülésekre kiváló.",
+                elkeszites: "Forrázat vagy olajos kivonat ('orbáncfűolaj'). FONTOS: fényérzékenyítő, és a máj CYP3A4 enzimjét indukálva csökkenti számos gyógyszer (vérhígítók, fogamzásgátlók, szívgyógyszerek) hatását!",
+                hagyomany: "Szent Iván napja körül virágzik; ha a szirmait szétmorzsoljuk, a hipericin miatt vérvörös nedvet enged ('Szent János vére')."
+            },
+            {
+                nev: "Orvosi angyalgyökér",
+                latinNev: "Angelica archangelica",
+                drog: "Angelicae radix",
+                hatoanyagCsoportok: ["Illóolajok", "Kumarinok", "Keserűanyagok"],
+                terapia: ["Emésztőrendszer", "Idegrendszer"],
+                gyujtes: "Ősz (első- vagy másodéves növény gyökértörzse)",
+                hatoanyagok: ["Illóolaj (fellandrén, pinén)", "Furanokumarinok (angelicin, bergaptén)", "Keserűanyagok"],
+                hatas: "Erős gyomorerősítő, szélhajtó, görcsoldó, étvágygerjesztő és idegerősítő.",
+                elkeszites: "Főzet (1 teáskanál aprított gyökér/csésze). Furanokumarin-tartalma miatt fényérzékenyítő (UV-sugárzás kerülendő)!",
+                hagyomany: "A legenda szerint Mihály arkangyal mutatta meg egy szerzetesnek álmában a pestis elleni gyógyító erejét."
+            },
+            {
+                nev: "Orvosi pemetefű",
+                latinNev: "Marrubium vulgare",
+                drog: "Marrubii herba",
+                hatoanyagCsoportok: ["Keserűanyagok", "Cseranyagok", "Illóolajok"],
+                terapia: ["Légutak", "Emésztőrendszer"],
+                gyujtes: "Június – Augusztus (virágzó felső hajtásvég)",
+                hatoanyagok: ["Marrubiin (diterpén-lakton keserűanyag)", "Cseranyagok", "Illóolaj", "Flavonoidok"],
+                hatas: "Kiváló köptető és nyákoldó makacs hörghurutban, emellett keserűanyaga révén étvágyjavító és epehajtó.",
+                elkeszites: "Forrázat (1 teáskanál/csésze, étkezés előtt vagy légúti panaszokra mézzel ízesítve).",
+                hagyomany: "Már az ókori egyiptomiak is köhögéscsillapítóként használták; a középkori kolostorok egyik legfontosabb légúti gyógynövénye."
+            },
+            {
+                nev: "Orvosi somkóró",
+                latinNev: "Melilotus officinalis",
+                drog: "Meliloti herba",
+                hatoanyagCsoportok: ["Kumarinok", "Flavonoidok", "Szaponinok"],
+                terapia: ["Szív- és érrendszer", "Külsőleges"],
+                gyujtes: "Június – Augusztus (virágzó felső hajtások)",
+                hatoanyagok: ["Melilotozidból száradáskor keletkező kumarin (0,4-1%)", "Flavonoidok", "Szaponinok"],
+                hatas: "Vénás és nyirokkeringést javító, ödémacsökkentő, visszérgyulladás- és aranyér-ellenes.",
+                elkeszites: "Forrázat vagy külsőleg kenőcs/borogatás. Rosszul tárolt, befülledt szénában a kumarinból dikumarol keletkezik, ami súlyos vérzékenységet okoz!",
+                hagyomany: "Jellegzetes friss szénaillatát a kumarin adja; régen molyűzőként és pipadohány illatosítására is használták."
+            },
+            {
+                nev: "Orvosi szappanfű",
+                latinNev: "Saponaria officinalis",
+                drog: "Saponariae rubrae radix",
+                hatoanyagCsoportok: ["Szaponinok", "Flavonoidok"],
+                terapia: ["Légutak", "Külsőleges"],
+                gyujtes: "Ősz (gyökér és tarack)",
+                hatoanyagok: ["Triterpén-szaponinok (szaporubin, szaponarozid - 5-8%)", "Flavonoidok (szaponarin)"],
+                hatas: "Erős nyákoldó és köptető hurutos légúti megbetegedésekben; külsőleg bőrbetegségek (ekcéma, pikkelysömör) lemosószere.",
+                elkeszites: "Főzet (1 kávéskanál aprított gyökér/csésze, 5 perc forralás). Túladagolása gyomorirritációt és hányingert okoz!",
+                hagyomany: "Vízben rázva erősen habzik a szaponinok miatt, ezért évszázadokig kényes selymek és gyapjúszövetek mosására használták."
+            },
+            {
+                nev: "Orvosi tüdőfű (Pettyegetett tüdőfű)",
+                latinNev: "Pulmonaria officinalis",
+                drog: "Pulmonariae folium / herba",
+                hatoanyagCsoportok: ["Nyálkaanyagok", "Cseranyagok", "Flavonoidok", "Alkaloidok"],
+                terapia: ["Légutak"],
+                gyujtes: "Április – Május (virágzó hajtás vagy kifejlett tőlevelek)",
+                hatoanyagok: ["Nyálkaanyagok", "Kovasav (oldható formában)", "Allantoin", "Cseranyagok", "Flavonoidok"],
+                hatas: "Nyálkahártya-bevonó, köhögéscsillapító, rekedtséget enyhítő és légúti regeneráló.",
+                elkeszites: "Forrázat (1-2 teáskanál/csésze, kúraszerűen max. 3-4 hétig).",
+                hagyomany: "A szignatúra-tan klasszikus példája: fehéren pettyezett levelei a tüdő szövetére emlékeztetnek, ezért a középkor óta tüdőbajokra adják."
+            },
+            {
+                nev: "Orvosi veronika (Veronikafű)",
+                latinNev: "Veronica officinalis",
+                drog: "Veronicae herba",
+                hatoanyagCsoportok: ["Keserűanyagok", "Cseranyagok", "Flavonoidok", "Szaponinok"],
+                terapia: ["Légutak", "Emésztőrendszer", "Külsőleges"],
+                gyujtes: "Június – Július (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Iridoid-glikozidok (aukubin, katalpol, veronikozid)", "Cseranyagok", "Flavonoidok (luteolin)", "Szaponinok"],
+                hatas: "Légúti hurutoldó, étvágyjavító, emésztést segítő és enyhe koleszterinszint-csökkentő; külsőleg bőrviszketés elleni.",
+                elkeszites: "Forrázat (1 teáskanál/csésze, napi 2 csésze).",
+                hagyomany: "A 17. században 'európai teának' nevezték és elixírt főztek belőle; a népi gyógyászatban a szellemi frissesség megőrzésére itták."
+            },
+            {
+                nev: "Orvosi ziliz (Fehérmályva)",
+                latinNev: "Althaea officinalis",
+                drog: "Althaeae radix / folium",
+                hatoanyagCsoportok: ["Nyálkaanyagok", "Poliszacharidok", "Flavonoidok"],
+                terapia: ["Légutak", "Emésztőrendszer"],
+                gyujtes: "Október – November (gyökér), Nyár (levél)",
+                hatoanyagok: ["Nyálkaanyagok (10-20% poliszacharid)", "Pektin", "Keményítő", "Aszparagin"],
+                hatas: "Kiváló nyálkahártya-bevonó, száraz ingerköhögést csillapító, gyomorhurut- és reflux-enyhítő.",
+                elkeszites: "Kizárólag HIDEG vizes áztatással (4-6 órán át szobahőmérsékleten)! Forrázva a keményítő csirizesedik, a nyálkaanyag sérül.",
+                hagyomany: "Neve a görög 'althaino' (gyógyítani) szóból származik; az ókor óta a torok és a gyomor védőszere."
+            },
+            {
+                nev: "Orvosi zsálya",
+                latinNev: "Salvia officinalis",
+                drog: "Salviae folium",
+                hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Keserűanyagok", "Flavonoidok"],
+                terapia: ["Légutak", "Emésztőrendszer", "Külsőleges"],
+                gyujtes: "Május – Június (virágzás előtt, fiatal levelek)",
+                hatoanyagok: ["Illóolaj (tujon, cineol, kámfor)", "Rozmaringsav (cseranyag)", "Karnozolsav (keserűanyag)", "Flavonoidok"],
+                hatas: "Erős összehúzó, gyulladáscsökkentő, antibakteriális (torok- és ínygyulladásra), izzadásgátló és emésztésjavító.",
+                elkeszites: "Forrázat (1 teáskanál/csésze). Belsőleg a tujontartalom miatt max. 2-3 hétig kúraszerűen fogyasztható! Terhesség és szoptatás alatt tilos (elapasztja a tejet)!",
+                hagyomany: "Neve a latin 'salvare' (gyógyítani, megmenteni) igéből származik; a salernói orvosi iskola mondása szerint: 'Miért halna meg az ember, ha kertjében zsálya nő?'"
+            },
+            {
+                nev: "Ökörfarkkóró (Molyhos és szöszös ökörfarkkóró)",
+                latinNev: "Verbascum thapsus / V. phlomoides",
+                drog: "Verbasci flos",
+                hatoanyagCsoportok: ["Nyálkaanyagok", "Szaponinok", "Flavonoidok", "Keserűanyagok"],
+                terapia: ["Légutak"],
+                gyujtes: "Július – Szeptember (reggelente csak a teljesen kinyílt sárga virágpárták csésze nélkül!)",
+                hatoanyagok: ["Nyálkaanyagok (3%)", "Triterpén-szaponinok (verbaszkoszaponin)", "Iridoidok (aukubin)", "Flavonoidok"],
+                hatas: "Kiváló köptető, nyákoldó és nyálkahártya-bevonó hörghurut, száraz köhögés és rekedtség esetén.",
+                elkeszites: "Forrázat (sűrű szövésű ruhán vagy teafilteren átszűrve, mert a porzószálak apró szőrei irritálhatják a torkot!).",
+                hagyomany: "Magas, sárga virágzatú szárát régen faggyúba mártva fáklyaként használták ('királygyertya')."
+            },
+            {
+                nev: "Örménygyökér (Orvosi örménygyökér)",
+                latinNev: "Inula helenium",
+                drog: "Helenii rhizoma et radix",
+                hatoanyagCsoportok: ["Poliszacharidok", "Illóolajok", "Keserűanyagok"],
+                terapia: ["Légutak", "Emésztőrendszer"],
+                gyujtes: "Ősz (2-3 éves növény gyökértörzse)",
+                hatoanyagok: ["Inulin (ősszel akár 40-44%!)", "Illóolaj (alantolakton, izoalantolakton - ún. helenin)", "Keserűanyagok"],
+                hatas: "Erős köptető, hörgőfertőtlenítő, epehajtó, étvágyjavító és bélparazita-ellenes.",
+                elkeszites: "Főzet (1 kávéskanál aprított gyökér/csésze, 5 perc forralás). Fészkesvirágzat-allergia esetén óvatosság ajánlott.",
+                hagyomany: "A legenda szerint a trójai Heléna könnyeiből sarjadt ki ('Helenium'); már az ókori Rómában is lakomák utáni gyomorerősítő borba áztatták."
+            },
+            {
+                nev: "Pásztortáska",
+                latinNev: "Capsella bursa-pastoris",
+                drog: "Bursae pastoris herba",
+                hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok"],
+                terapia: ["Női bajok", "Szív- és érrendszer"],
+                gyujtes: "Április – Szeptember (virágzó és terméses föld feletti hajtás)",
+                hatoanyagok: ["Flavonoidok (diozmin, rutin)", "Biogén aminok (kolin, tiramin)", "Peptidek", "Káliumsók", "Cseranyagok"],
+                hatas: "Méhvérzést csillapító (erős menstruációs vérzés mérséklésére), vérnyomásszabályozó és érfalerősítő.",
+                elkeszites: "Forrázat (1-2 teáskanál/csésze, napi 2-3 csésze). Terhesség alatt tilos (méhösszehúzó hatású)!",
+                hagyomany: "Szív alakú becőke termései a régi pásztorok tarisznyájára emlékeztetnek; az első világháborúban a vérzéscsillapító anyarozs pótlására használták."
+            },
+            {
+                nev: "Porcikafű (Kopasz és borzas porcikafű)",
+                latinNev: "Herniaria glabra / H. hirsuta",
+                drog: "Herniariae herba",
+                hatoanyagCsoportok: ["Szaponinok", "Flavonoidok", "Kumarinok"],
+                terapia: ["Húgyutak"],
+                gyujtes: "Június – Augusztus (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Triterpén-szaponinok (herniariaszaponinok)", "Flavonoidok (kvercetin, izoramnetin)", "Kumarinok (umbelliferon, herniarin)"],
+                hatas: "Kiváló vizelethajtó, húgyúti görcsoldó és vesekő-megelőző (gátolja a húgyúti kristályok összecsapzódását).",
+                elkeszites: "Forrázat (1 teáskanál/csésze, bőséges folyadékfogyasztás mellett).",
+                hagyomany: "Neve a latin 'hernia' (sérv) szóból ered, mert a középkori orvoslásban sérvek kezelésére is alkalmazták."
+            },
+            {
+                nev: "Porcsinfű (Madárkeserűfű)",
+                latinNev: "Polygonum aviculare",
+                drog: "Polygoni avicularis herba",
+                hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok"],
+                terapia: ["Légutak", "Húgyutak", "Emésztőrendszer"],
+                gyujtes: "Június – Szeptember (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Kovasav (1%, részben vízoldékony formájában)", "Flavonoidok (avikularin, hiperozid)", "Cseranyagok", "Nyálkaanyag"],
+                hatas: "Légúti hurutoldó, köhögéscsillapító, enyhe vízhajtó és összehúzó hatású.",
+                elkeszites: "Főzet (5-10 perc főzés szükséges a kovasav kioldódásához).",
+                hagyomany: "Taposott utak szélén is megélő szívós gyógynövény; a népi gyógyászatban a tüdő és a húgyutak erősítőjeként tartották számon."
+            },
+            {
+                nev: "Rebarbara (Kínai / Orvosi rebarbara)",
+                latinNev: "Rheum palmatum / R. officinale",
+                drog: "Rhei radix",
+                hatoanyagCsoportok: ["Antrakinonok", "Cseranyagok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Ősz (többéves növény megtisztított gyökértörzse)",
+                hatoanyagok: ["Antrakinon-glikozidok (rein, emodin, szennozidok)", "Gallotannin típusú cseranyagok"],
+                hatas: "Kettős hatású dózisfüggő drog: kis adagban (0,1-0,2 g) a cseranyagok miatt hasmenés elleni és gyomorerősítő, nagyobb adagban (1-2 g) hashajtó!",
+                elkeszites: "Porítva vagy rövid főzetként (max. 1-2 hétig hashajtóként). Oxálsav-tartalma miatt vesekő és köszvény esetén tilos!",
+                hagyomany: "Az ókori Selyemút egyik legértékesebb árucikke volt, amelyet a Volga ('Rha') folyón keresztül szállítottak Európába."
+            },
+            {
+                nev: "Réti legyezőfű",
+                latinNev: "Filipendula ulmaria",
+                drog: "Spiraeae flos / herba",
+                hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Illóolajok"],
+                terapia: ["Légutak", "Szív- és érrendszer", "Húgyutak"],
+                gyujtes: "Június – Augusztus (virágzat és felső hajtás)",
+                hatoanyagok: ["Szalicilát-glikozidok (spiraein, monotropitin - ebből szalicilsav képződik)", "Flavonoidok (spiraeozid)", "Ellagitannin cseranyagok"],
+                hatas: "Természetes lázcsillapító, izzasztó, gyulladáscsökkentő és fájdalomcsillapító (ízületi és meghűléses panaszokra).",
+                elkeszites: "Forrázat (nem szabad forralni, mert az illékony metil-szalicilát elillan!). Szalicilát-érzékenység esetén tilos!",
+                hagyomany: "Korábbi tudományos nevéből ('Spiraea ulmaria') származik az 'Aszpirin' (a-spirin) elnevezés, mivel először belőle izolálták a szalicilsavat."
+            },
+            {
+                nev: "Réti palástfű",
+                latinNev: "Alchemilla vulgaris / A. xanthochlora",
+                drog: "Alchemillae herba",
+                hatoanyagCsoportok: ["Cseranyagok", "Flavonoidok"],
+                terapia: ["Női bajok", "Emésztőrendszer"],
+                gyujtes: "Május – Augusztus (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Ellagitannin típusú cseranyagok (pedunkulagin, agrimoniin - 6-8%)", "Flavonoidok (kvercetin-glikozidok)"],
+                hatas: "Erős összehúzó, vérzéscsillapító és gyulladáscsökkentő; menstruációs görcsök, erős vérzés és hasmenés ellen kiváló.",
+                elkeszites: "Forrázat (1-2 teáskanál/csésze, napi 2-3 csésze).",
+                hagyomany: "Tudományos neve ('Alchemilla') az alkimistákra utal, akik a levelei csücskén reggelente megjelenő 'égi harmatcseppeket' (guttáció) használták a bölcsek kövének kereséséhez."
+            },
+            {
+                nev: "Rozmaring",
+                latinNev: "Rosmarinus officinalis",
+                drog: "Rosmarini folium",
+                hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Keserűanyagok", "Flavonoidok"],
+                terapia: ["Szív- és érrendszer", "Emésztőrendszer", "Külsőleges"],
+                gyujtes: "Nyár – Ősz (levelek és fiatal hajtások)",
+                hatoanyagok: ["Illóolaj (1,8-cineol, kámfor, alfa-pinén, borneol)", "Rozmaringsav", "Karnozolsav (keserűanyag)", "Flavonoidok"],
+                hatas: "Vérkeringést serkentő (alacsony vérnyomás esetén élénkítő), epehajtó, görcsoldó; külsőleg reumaellenes és hajhagymákat serkentő.",
+                elkeszites: "Forrázat (1 teáskanál/csésze, reggel vagy délelőtt fogyasztva) vagy rozmaringos bedörzsölő/fürdő. Magas vérnyomás és terhesség esetén ellenjavallt!",
+                hagyomany: "Neve a latin 'ros marinus' (tenger harmata) kifejezésből ered; az ókori görög diákok rozmaringkoszorút viseltek a fejükön a memória javítására."
+            },
+            {
+                nev: "Szemvidítófű (Orvosi szemvidító)",
+                latinNev: "Euphrasia rostkoviana",
+                drog: "Euphrasiae herba",
+                hatoanyagCsoportok: ["Keserűanyagok", "Cseranyagok", "Flavonoidok"],
+                terapia: ["Külsőleges", "Légutak"],
+                gyujtes: "Július – Szeptember (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Iridoid-glikozidok (aukubin, katalpol)", "Cseranyagok", "Flavonoidok (luteolin, apigenin)", "Fenolsavak"],
+                hatas: "Kötőhártya-gyulladás, szemhéjszél-gyulladás, szemfáradtság és könnyezés elleni összehúzó és gyulladáscsökkentő.",
+                elkeszites: "Forrázat (borogatásra és szemlemosásra kizárólag frissen főzve és steril gézen átszűrve, langyosan!).",
+                hagyomany: "Már a középkori füveskönyvekben is a szem bajainak első számú gyógyfüveként ('oculus Christi') írták le."
+            },
+            {
+                nev: "Szurokfű (Közönséges szurokfű / Oregánó)",
+                latinNev: "Origanum vulgare",
+                drog: "Origani herba",
+                hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
+                terapia: ["Légutak", "Emésztőrendszer"],
+                gyujtes: "Július – Augusztus (virágzó felső hajtások)",
+                hatoanyagok: ["Illóolaj (karvakrol, timol - erős antimikrobiális fenolok)", "Rozmaringsav", "Flavonoidok"],
+                hatas: "Erős antibakteriális és gombaellenes, köptető, köhögéscsillapító, étvágyjavító és emésztést serkentő.",
+                elkeszites: "Forrázat (1 teáskanál/csésze, lefedve 10 percig állni hagyni).",
+                hagyomany: "Neve a görög 'orosz' (hegy) és 'ganosz' (öröm) szavakból ered ('a hegyek dísze'); Hippokratész fertőtlenítőként használta."
+            },
+            {
+                nev: "Szúrós gyöngyajak",
+                latinNev: "Leonurus cardiaca",
+                drog: "Leonuri cardiacae herba",
+                hatoanyagCsoportok: ["Keserűanyagok", "Flavonoidok", "Cseranyagok", "Alkaloidok"],
+                terapia: ["Szív- és érrendszer", "Idegrendszer"],
+                gyujtes: "Június – Augusztus (virágzó felső hajtások)",
+                hatoanyagok: ["Iridoid-glikozidok (leonurid, ajugozid)", "Diterpén-laktonok (leokardin)", "Flavonoidok (rutin, hiperozid)", "Sztachidrin", "Cseranyagok"],
+                hatas: "Nyugtatja az ideges eredetű szívpanaszokat (szapora szívverés, szívidegesség), enyhén csökkenti a vérnyomást és feszültségoldó.",
+                elkeszites: "Forrázat (1-2 teáskanál/csésze, napi 2 csésze, gyakran galagonyával és citromfűvel társítva).",
+                hagyomany: "Tudományos nevében a 'cardiaca' (szívhez tartozó) jelző évezredes szívnyugtató alkalmazására utal."
+            },
+            {
+                nev: "Tárkony (Tárkonyüröm)",
+                latinNev: "Artemisia dracunculus",
+                drog: "Dracunculi herba",
+                hatoanyagCsoportok: ["Illóolajok", "Kumarinok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Június – Augusztus (leveles, virágzó hajtások)",
+                hatoanyagok: ["Illóolaj (esztragol, ocimén, fellandrén)", "Kumarinok (herniarin)", "Flavonoidok", "Cseranyagok"],
+                hatas: "Étvágygerjesztő, emésztésserkentő, epehajtó, szélhajtó és enyhe vizelethajtó.",
+                elkeszites: "Forrázat vagy frissen/szárítva fűszerként ételekbe (tujont nem tartalmaz, ellentétben más ürömfajokkal!).",
+                hagyomany: "Neve a latin 'dracunculus' (kis sárkány) szóból ered kígyózó gyökerei miatt; az erdélyi konyha és népi gyógyászat alapnövénye."
+            },
+            {
+                nev: "Tárnics (Sárga tárnics)",
+                latinNev: "Gentiana lutea",
+                drog: "Gentianae radix",
+                hatoanyagCsoportok: ["Keserűanyagok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Ősz (többéves növény gyökere – csak külföldi termesztésből származó drog!)",
+                hatoanyagok: ["Szekoiridoid keserűanyagok (genciopikrozid 2-3%, amarogencin - a világ egyik legkeserűbb természetes anyaga!)", "Xantonok (gentizin)"],
+                hatas: "Tiszta keserűanyag (amara pura): reflexesen fokozza a nyál-, gyomornedv- és epetermelést, étvágytalanság és emésztési gyengeség ellen kiváló.",
+                elkeszites: "Hideg vizes áztatással vagy rövid főzettel (étkezés előtt 30 perccel, édesítés nélkül!). Gyomor- és nyombélfekély esetén szigorúan tilos!",
+                hagyomany: "Nevét Gentius illír királyról kapta, aki elsőként fedezte fel gyógyhatását; az alpesi gyomorkeserűk fő alapanyaga."
+            },
+            {
+                nev: "Téli zöld meténg (Kis télizöld)",
+                latinNev: "Vinca minor",
+                drog: "Vincae minoris herba",
+                hatoanyagCsoportok: ["Alkaloidok", "Cseranyagok", "Flavonoidok"],
+                terapia: ["Szív- és érrendszer"],
+                gyujtes: "Tavasz – Nyár (leveles hajtások)",
+                hatoanyagok: ["Indol-alkaloidok (vinkamin - agyi értágító)", "Cseranyagok", "Flavonoidok", "Urzolsav"],
+                hatas: "Javítja az agyi vérkeringést és oxigénellátást, enyhén csökkenti a vérnyomást (elsősorban gyógyszeripari alapanyag).",
+                elkeszites: "Alkaloidtartalma miatt házilagos teafőzésre nem ajánlott – standardizált készítmények alapanyaga.",
+                hagyomany: "Örökzöld levelei miatt a halhatatlanság és a hűség jelképe; hatóanyagából, a vinkaminból fejlesztették ki a Cavinton hatóanyagát."
+            },
+            {
+                nev: "Torma (Közönséges torma)",
+                latinNev: "Armoracia rusticana",
+                drog: "Armoraciae recens radix",
+                hatoanyagCsoportok: ["Illóolajok"],
+                terapia: ["Légutak", "Húgyutak", "Külsőleges"],
+                gyujtes: "Ősz – Tavasz (friss karógyökér)",
+                hatoanyagok: ["Mustárolaj-glikozidok (szinigrin, glükonazturtiin - reszeléskor mirozináz enzim hatására allil-izotiocianát szabadul fel!)", "C-vitamin"],
+                hatas: "Erős antibakteriális és vírusellenes ('növényi antibiotikum') légúti és húgyúti fertőzésekben; külsőleg vérbőséget okozó reumaellenes.",
+                elkeszites: "Frissen reszelve (mézzel keverve légúti fertőzésekre) vagy külsőleg rövid ideig borogatásra (hólyaghúzó hatású lehet!).",
+                hagyomany: "A középkori Európában a skorbut megelőzésére és járványok idején fertőtlenítőként fogyasztották."
+            },
+            {
+                nev: "Tyúkhúr (Közönséges tyúkhúr)",
+                latinNev: "Stellaria media",
+                drog: "Stellariae herba",
+                hatoanyagCsoportok: ["Szaponinok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer", "Húgyutak", "Külsőleges"],
+                gyujtes: "Tavasz – Ősz (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Triterpén-szaponinok", "Flavonoidok (rutin, apigenin-glikozidok)", "C-vitamin", "Kálium", "Kovasav"],
+                hatas: "Epehajtó, koleszterinszint-csökkentő, enyhe vízhajtó és anyagcsere-fokozó; külsőleg bőrviszketés és ekcéma elleni.",
+                elkeszites: "Forrázat vagy friss salátaként / présnedvként fogyasztva.",
+                hagyomany: "A népi gyógyászatban az epe- és májműködés tavaszi frissítőjeként tartották számon."
+            },
+            {
+                nev: "Vadgesztenye",
+                latinNev: "Aesculus hippocastanum",
+                drog: "Hippocastani semen",
+                hatoanyagCsoportok: ["Szaponinok", "Kumarinok", "Flavonoidok"],
+                terapia: ["Szív- és érrendszer", "Külsőleges"],
+                gyujtes: "Szeptember – Október (érett mag)",
+                hatoanyagok: ["Eszcin (triterpén-szaponin keverék)", "Eszkulin (kumarin-glikozid)", "Flavonoidok"],
+                hatas: "Erősíti a vénák falát, csökkenti a hajszálerek áteresztőképességét, ödémacsökkentő és visszérgyulladás-gátló.",
+                elkeszites: "Külsőleg tinktúra vagy krém formájában; belsőleg csak gyári, standardizált készítményként (a nyers mag enyhén mérgező).",
+                hagyomany: "A törökök a 16. században hozták be Európába; a magját lovak kehességének (légúti bajainak) kezelésére adták."
+            },
+            {
+                nev: "Vérehulló fecskefű",
+                latinNev: "Chelidonium majus",
+                drog: "Chelidonii herba",
+                hatoanyagCsoportok: ["Alkaloidok", "Flavonoidok"],
+                terapia: ["Külsőleges", "Emésztőrendszer"],
+                gyujtes: "Május – Július (virágzó föld feletti hajtás)",
+                hatoanyagok: ["Izokinolin-alkaloidok (kelidonin, szangvinarin, berberin - több mint 20 alkaloid!)", "Kávésav-származékok", "Flavonoidok"],
+                hatas: "Külsőleg friss narancssárga tejnedve vírusos szemölcsök és tyúkszemek elleni; belsőleg epeúti görcsoldó.",
+                elkeszites: "Külsőleg a friss tejnedvvel naponta ecsetelve a szemölcsöt. Belsőleges használata a májkárosító (hepatotoxikus) hatása miatt ma már ELLENJAVALLT!",
+                hagyomany: "Neve a görög 'khelidón' (fecske) szóból ered, mert a fecskék érkezésekor kezd virágozni és elvonulásukkor hervad el."
+            },
+            {
+                nev: "Vérontófű (Vérontó pimpó)",
+                latinNev: "Potentilla erecta",
+                drog: "Tormentillae rhizoma",
+                hatoanyagCsoportok: ["Cseranyagok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer", "Külsőleges"],
+                gyujtes: "Ősz vagy Tavasz (gyökértörzs – elvágva vörösre színeződik!)",
+                hatoanyagok: ["Katekines cseranyagok (15-22% - az egyik legmagasabb cseranyagtartalmú hazai drog!)", "Tormentillol", "Flavonoidok"],
+                hatas: "Rendkívül erős összehúzó (adsztringens), heveny hasmenés elleni, vérzéscsillapító és nyálkahártya-gyulladást gátló (szájüreg, fogíny).",
+                elkeszites: "Főzet (1 kávéskanál aprított gyökértörzs/csésze, 5-10 perc forralás) vagy tinktúra ecsetelésre.",
+                hagyomany: "Neve a latin 'tormentum' (kín, bélgörcs) szóból származik, mivel a vérhas és a súlyos hasmenés legfontosabb gyógyszere volt."
+            },
+            {
+                nev: "Vidrafű (Keserű vidrafű)",
+                latinNev: "Menyanthes trifoliata",
+                drog: "Trifolii fibrini folium",
+                hatoanyagCsoportok: ["Keserűanyagok", "Flavonoidok", "Cseranyagok"],
+                terapia: ["Emésztőrendszer"],
+                gyujtes: "Május – Június (háromosztatú levelek – Magyarországon védett faj, csak termesztett drog használható!)",
+                hatoanyagok: ["Szekoiridoid keserűanyagok (foliamentin, mentiafolin, loganin)", "Flavonoidok (rutin, hiperozid)", "Cseranyagok"],
+                hatas: "Tiszta keserűanyag (amara pura): étvágyjavító, gyomornedv- és epetermelést serkentő, emésztési gyengeség elleni.",
+                elkeszites: "Forrázat (1 kávéskanál/csésze, étkezés előtt fél órával, édesítés nélkül).",
+                hagyomany: "Mocsaras, lápos élőhelye miatt kapta a vidrafű nevet; északi országokban régen komló helyett sörfőzéshez is használták."
+            }
+        ];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const dbTabBtn = document.getElementById("dbTabBtn");
+            if (dbTabBtn) {
+                dbTabBtn.textContent = `📚 Adatbázis (${novenyekAdatbazis.length})`;
+            }
+
+            // NÉZETVÁLTÁS (Adatbázis vs Kvíz)
+            const navTabs = document.querySelectorAll(".nav-tab");
+            const databaseView = document.getElementById("databaseView");
+            const quizView = document.getElementById("quizView");
+
+            navTabs.forEach(tab => {
+                tab.addEventListener("click", () => {
+                    navTabs.forEach(t => t.classList.remove("active"));
+                    tab.classList.add("active");
+                    if (tab.dataset.view === "databaseView") {
+                        databaseView.classList.remove("hidden");
+                        quizView.classList.add("hidden");
+                    } else {
+                        databaseView.classList.add("hidden");
+                        quizView.classList.remove("hidden");
+                        startNewSession();
+                    }
+                });
+            });
+
+            // ADATBÁZIS LOGIKA
+            const cardsGrid = document.getElementById("cardsGrid");
+            const searchInput = document.getElementById("searchInput");
+            const hatoanyagSelect = document.getElementById("hatoanyagSelect");
+            const terapiaButtons = document.querySelectorAll("#terapiaFilters .filter-btn");
+            const resultCount = document.getElementById("resultCount");
+            const resetBtn = document.getElementById("resetFilters");
+
+            const modal = document.getElementById("plantModal");
+            const modalBody = document.getElementById("modalBody");
+            const closeModal = document.getElementById("closeModal");
+
+            let activeTerapia = "Összes";
+            let activeHatoanyag = "Összes";
+            let searchQuery = "";
+
+            function renderCards(list) {
+                cardsGrid.innerHTML = "";
+                resultCount.textContent = `Megjelenítve: ${list.length} / ${novenyekAdatbazis.length} gyógynövény`;
+
+                if (list.length === 0) {
+                    cardsGrid.innerHTML = `<p style="color: var(--text-muted);">Nincs a szűrésnek megfelelő gyógynövény.</p>`;
+                    return;
+                }
+
+                list.forEach(noveny => {
+                    const card = document.createElement("div");
+                    card.className = "plant-card";
+
+                    const terapiaTags = noveny.terapia.map(t => `<span class="tag">${t}</span>`).join("");
+                    const chemTags = noveny.hatoanyagCsoportok.map(h => `<span class="tag chem">${h}</span>`).join("");
+
+                    card.innerHTML = `
+                        <div>
+                            <h2>${noveny.nev}</h2>
+                            <div class="latin-name">${noveny.latinNev}</div>
+                            <div class="drog-name">Drog: ${noveny.drog}</div>
+                            <p class="card-effect">${noveny.hatas}</p>
+                        </div>
+                        <div class="tags">
+                            ${terapiaTags}
+                            ${chemTags}
+                        </div>
+                    `;
+
+                    card.addEventListener("click", () => openModal(noveny));
+                    cardsGrid.appendChild(card);
+                });
+            }
+
+            function applyFilters() {
+                const q = searchQuery.toLowerCase().trim();
+
+                const filtered = novenyekAdatbazis.filter(n => {
+                    const matchTerapia = activeTerapia === "Összes" || n.terapia.includes(activeTerapia);
+                    const matchHatoanyag = activeHatoanyag === "Összes" || n.hatoanyagCsoportok.includes(activeHatoanyag);
+
+                    const matchSearch = !q ||
+                        n.nev.toLowerCase().includes(q) ||
+                        n.latinNev.toLowerCase().includes(q) ||
+                        n.drog.toLowerCase().includes(q) ||
+                        n.hatas.toLowerCase().includes(q) ||
+                        n.hatoanyagok.some(h => h.toLowerCase().includes(q));
+
+                    return matchTerapia && matchHatoanyag && matchSearch;
+                });
+
+                renderCards(filtered);
+            }
+
+            function openModal(n) {
+                modalBody.innerHTML = `
+                    <h2>${n.nev}</h2>
+                    <div class="latin-name">${n.latinNev}</div>
+                    <div class="drog-name">Drog: <strong>${n.drog}</strong></div>
+
+                    <div class="modal-section">
+                        <h4>Gyűjtési idő és rész</h4>
+                        <p>${n.gyujtes}</p>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4>Fő hatóanyagok</h4>
+                        <p>${n.hatoanyagok.join(", ")}</p>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4>Gyógyhatás</h4>
+                        <p>${n.hatas}</p>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4>Elkészítés és ellenjavallatok</h4>
+                        <p>${n.elkeszites}</p>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4>Hagyomány és érdekesség</h4>
+                        <p>${n.hagyomany}</p>
+                    </div>
+                `;
+                modal.classList.remove("hidden");
+            }
+
+            closeModal.addEventListener("click", () => modal.classList.add("hidden"));
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) modal.classList.add("hidden");
+            });
+
+            searchInput.addEventListener("input", (e) => {
+                searchQuery = e.target.value;
+                applyFilters();
+            });
+
+            hatoanyagSelect.addEventListener("change", (e) => {
+                activeHatoanyag = e.target.value;
+                applyFilters();
+            });
+
+            terapiaButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    terapiaButtons.forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    activeTerapia = btn.dataset.value;
+                    applyFilters();
+                });
+            });
+
+            resetBtn.addEventListener("click", () => {
+                searchQuery = "";
+                searchInput.value = "";
+                activeTerapia = "Összes";
+                activeHatoanyag = "Összes";
+                hatoanyagSelect.value = "Összes";
+                terapiaButtons.forEach(b => b.classList.remove("active"));
+                if (terapiaButtons[0]) terapiaButtons[0].classList.add("active");
+                applyFilters();
+            });
+
+            renderCards(novenyekAdatbazis);
+
+            // KVÍZ LOGIKA (10 kérdéses körök + Rangok)
+            const QUESTIONS_PER_ROUND = 10;
+            const levelButtons = document.querySelectorAll(".level-btn");
+            const questionCounter = document.getElementById("questionCounter");
+            const scoreText = document.getElementById("scoreText");
+            const progressBarFill = document.getElementById("progressBarFill");
+
+            const activeQuizBlock = document.getElementById("activeQuizBlock");
+            const quizBadge = document.getElementById("quizBadge");
+            const quizQuestion = document.getElementById("quizQuestion");
+            const quizOptions = document.getElementById("quizOptions");
+            const quizFeedback = document.getElementById("quizFeedback");
+            const nextQuestionBtn = document.getElementById("nextQuestionBtn");
+
+            const quizResultBlock = document.getElementById("quizResultBlock");
+            const rankIcon = document.getElementById("rankIcon");
+            const rankTitle = document.getElementById("rankTitle");
+            const rankScorePill = document.getElementById("rankScorePill");
+            const rankDesc = document.getElementById("rankDesc");
+            const missedBox = document.getElementById("missedBox");
+            const missedList = document.getElementById("missedList");
+            const restartSameLevelBtn = document.getElementById("restartSameLevelBtn");
+            const nextLevelBtn = document.getElementById("nextLevelBtn");
+
+            let currentLevel = 1;
+            let sessionPlants = [];
+            let currentQuestionIdx = 0;
+            let score = 0;
+            let missedPlants = [];
+
+            const rankTable = {
+                1: [
+                    { min: 0, max: 3, icon: "🌱", title: "Kíváncsi vándor", desc: "Még csak most ismerkedsz a rétek és erdők gyógyító lakóival. Lapozd át az adatbázist, és próbáld újra!" },
+                    { min: 4, max: 6, icon: "🧺", title: "Mezei gyűjtő", desc: "A legismertebb gyógynövényeket már magabiztosan felismered, de van még felfedeznivaló a herbáriumban." },
+                    { min: 7, max: 8, icon: "🌿", title: "Füvesember-tanonc", desc: "Szép eredmény! A gyógyhatások többségét pontosan kötöd a megfelelő növényhez." },
+                    { min: 9, max: 10, icon: "🏅", title: "Tapasztalt gyűjtő", desc: "Kiváló ismeretek! Biztos kézzel igazodsz el a gyógynövények terápiás alkalmazásában." }
+                ],
+                2: [
+                    { min: 0, max: 3, icon: "📖", title: "Kertészinas", desc: "A latin nevek és a hivatalos drogmegnevezések még gyakorlást igényelnek. Figyeld a végződéseket (herba, radix, flos, folium)!" },
+                    { min: 4, max: 6, icon: "🪴", title: "Gyógynövény-ismerő", desc: "Alakul a rendszertani tudásod, a leggyakoribb drogok már stabilan megvannak." },
+                    { min: 7, max: 8, icon: "📜", title: "Okleveles herbárius", desc: "Komoly szakmai felkészültség! A hivatalos drognevek nagy részét hibátlanul azonosítod." },
+                    { min: 9, max: 10, icon: "👑", title: "A herbárium őrzője", desc: "Lenyűgöző pontosság! A binominális nevezéktan és a drogismeret mestere vagy." }
+                ],
+                3: [
+                    { min: 0, max: 3, icon: "🧪", title: "Laboráns", desc: "A farmakognózia mélyebb rétegei embert próbálóak. Nézd át a fő hatóanyagokat és kémiai csoportokat!" },
+                    { min: 4, max: 6, icon: "⚗️", title: "Drogismerő", desc: "Jó úton jársz: a legfontosabb illóolajokat, keserűanyagokat és glikozidokat már felismered." },
+                    { min: 7, max: 8, icon: "🔬", title: "Farmakognózia-mester", desc: "Kiemelkedő fitokémiai tudás! A növények hatóanyagprofilját mélységében átlátod." },
+                    { min: 9, max: 10, icon: "🏆", title: "A racionális népgyógyászat nagymestere", desc: "Tökéletes teljesítmény a legnehezebb szinten! Ez már egyetemi szigorlati szintű tudás." }
+                ]
+            };
+
+            function shuffle(arr) {
+                return [...arr].sort(() => Math.random() - 0.5);
+            }
+
+            levelButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    levelButtons.forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    currentLevel = parseInt(btn.dataset.level, 10);
+                    startNewSession();
+                });
+            });
+
+            restartSameLevelBtn.addEventListener("click", startNewSession);
+
+            nextLevelBtn.addEventListener("click", () => {
+                if (currentLevel < 3) {
+                    currentLevel++;
+                    levelButtons.forEach(b => {
+                        b.classList.toggle("active", parseInt(b.dataset.level, 10) === currentLevel);
+                    });
+                    startNewSession();
+                }
+            });
+
+            nextQuestionBtn.addEventListener("click", () => {
+                currentQuestionIdx++;
+                if (currentQuestionIdx < QUESTIONS_PER_ROUND) {
+                    renderCurrentQuestion();
+                } else {
+                    showRoundResult();
+                }
+            });
+
+            function startNewSession() {
+                const count = Math.min(QUESTIONS_PER_ROUND, novenyekAdatbazis.length);
+                sessionPlants = shuffle(novenyekAdatbazis).slice(0, count);
+                currentQuestionIdx = 0;
+                score = 0;
+                missedPlants = [];
+
+                activeQuizBlock.classList.remove("hidden");
+                quizResultBlock.classList.add("hidden");
+                renderCurrentQuestion();
+            }
+
+            function renderCurrentQuestion() {
+                quizFeedback.classList.add("hidden");
+                nextQuestionBtn.classList.add("hidden");
+                quizOptions.innerHTML = "";
+
+                const totalQ = sessionPlants.length;
+                questionCounter.textContent = `${currentQuestionIdx + 1} / ${totalQ}`;
+                scoreText.textContent = `${score}`;
+                progressBarFill.style.width = `${((currentQuestionIdx + 1) / totalQ) * 100}%`;
+
+                const correctPlant = sessionPlants[currentQuestionIdx];
+                const distractors = shuffle(novenyekAdatbazis.filter(p => p.nev !== correctPlant.nev)).slice(0, 3);
+                const choices = shuffle([correctPlant, ...distractors]);
+
+                let questionText = "";
+                let getChoiceLabel;
+
+                if (currentLevel === 1) {
+                    quizBadge.textContent = "1. Szint (Gyűjtő) – Terápiás hatás felismerése";
+                    questionText = `Melyik gyógynövényre igaz a következő leírás?\n„${correctPlant.hatas}”`;
+                    getChoiceLabel = (p) => p.nev;
+                } else if (currentLevel === 2) {
+                    quizBadge.textContent = "2. Szint (Herbárius) – Drog és latin név";
+                    questionText = `Mi a hivatalos drogmegnevezése és latin neve ennek a növénynek: ${correctPlant.nev}?`;
+                    getChoiceLabel = (p) => `${p.drog} (${p.latinNev})`;
+                } else {
+                    quizBadge.textContent = "3. Szint (Farmakognózia) – Hatóanyagok";
+                    const sampleChems = Array.isArray(correctPlant.hatoanyagok)
+                        ? correctPlant.hatoanyagok.slice(0, 2).join(", ")
+                        : String(correctPlant.hatoanyagok);
+                    questionText = `Melyik gyógynövény tartalmazza ezeket a fő hatóanyagokat:\n${sampleChems}?`;
+                    getChoiceLabel = (p) => `${p.nev} – [${p.hatoanyagCsoportok.join(", ")}]`;
+                }
+
+                quizQuestion.textContent = questionText;
+
+                choices.forEach(choice => {
+                    const btn = document.createElement("button");
+                    btn.className = "quiz-option";
+                    btn.textContent = getChoiceLabel(choice);
+
+                    btn.addEventListener("click", () => {
+                        const allBtns = quizOptions.querySelectorAll(".quiz-option");
+                        allBtns.forEach(b => b.disabled = true);
+
+                        if (choice.nev === correctPlant.nev) {
+                            btn.classList.add("correct");
+                            score++;
+                            scoreText.textContent = `${score}`;
+                            quizFeedback.innerHTML = `✅ <strong>Helyes!</strong> ${correctPlant.nev} (<em>${correctPlant.latinNev}</em>) – Drog: ${correctPlant.drog}.<br><small>${correctPlant.elkeszites}</small>`;
+                        } else {
+                            btn.classList.add("wrong");
+                            missedPlants.push(correctPlant);
+                            allBtns.forEach((b, idx) => {
+                                if (choices[idx].nev === correctPlant.nev) {
+                                    b.classList.add("correct");
+                                }
+                            });
+                            quizFeedback.innerHTML = `❌ <strong>Téves!</strong> A helyes válasz: <strong>${correctPlant.nev}</strong> (<em>${correctPlant.latinNev}</em>).<br><small>${correctPlant.hatas}</small>`;
+                        }
+
+                        nextQuestionBtn.textContent = (currentQuestionIdx === totalQ - 1)
+                            ? "Eredmény és rang megtekintése 🏆"
+                            : "Következő kérdés →";
+
+                        quizFeedback.classList.remove("hidden");
+                        nextQuestionBtn.classList.remove("hidden");
+                    });
+
+                    quizOptions.appendChild(btn);
+                });
+            }
+
+            function showRoundResult() {
+                activeQuizBlock.classList.add("hidden");
+                quizResultBlock.classList.remove("hidden");
+
+                const totalQ = sessionPlants.length || QUESTIONS_PER_ROUND;
+                const ranks = rankTable[currentLevel];
+                const earned = ranks.find(r => score >= r.min && score <= r.max) || ranks[0];
+                const percent = Math.round((score / totalQ) * 100);
+
+                rankIcon.textContent = earned.icon;
+                rankTitle.textContent = earned.title;
+                rankScorePill.textContent = `${score} / ${totalQ} helyes válasz (${percent}%)`;
+                rankDesc.textContent = earned.desc;
+
+                if (missedPlants.length > 0) {
+                    missedBox.classList.remove("hidden");
+                    missedList.innerHTML = missedPlants.map(p =>
+                        `<li><strong>${p.nev}</strong> (<em>${p.latinNev}</em>) – ${p.drog}</li>`
+                    ).join("");
+                } else {
+                    missedBox.classList.add("hidden");
+                }
+
+                if (currentLevel < 3) {
+                    nextLevelBtn.classList.remove("hidden");
+                } else {
+                    nextLevelBtn.classList.add("hidden");
+                }
+            }
+        });
+    </script>
+</body>
+</html>
