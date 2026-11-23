@@ -734,17 +734,7 @@
 
                 <div class="filter-group">
                     <label>Terápiás terület:</label>
-                    <div id="terapiaFilters" class="filter-buttons">
-                        <button class="filter-btn active" data-type="terapia" data-value="Összes">Összes</button>
-                        <button class="filter-btn" data-type="terapia" data-value="Emésztőrendszer">Emésztőrendszer</button>
-                        <button class="filter-btn" data-type="terapia" data-value="Légutak">Légutak</button>
-                        <button class="filter-btn" data-type="terapia" data-value="Idegrendszer">Idegrendszer</button>
-                        <button class="filter-btn" data-type="terapia" data-value="Szív- és érrendszer">Szív- és érrendszer</button>
-                        <button class="filter-btn" data-type="terapia" data-value="Húgyutak">Húgyutak</button>
-                        <button class="filter-btn" data-type="terapia" data-value="Immunrendszer">Immunrendszer</button>
-                        <button class="filter-btn" data-type="terapia" data-value="Női bajok">Női bajok</button>
-                        <button class="filter-btn" data-type="terapia" data-value="Külsőleges">Külsőleges</button>
-                    </div>
+                    <div id="terapiaFilters" class="filter-buttons"></div>
                 </div>
 
                 <div class="filter-group">
@@ -905,13 +895,33 @@
     </div>
 
     <script>
+        const TERAPIAS_TERULETEK = [
+            "Összes",
+            "Emésztőrendszer",
+            "Máj- és eperendszer",
+            "Légutak",
+            "Szájüreg és torok",
+            "Idegrendszer",
+            "Szív- és érrendszer",
+            "Húgyutak",
+            "Mozgásszervek",
+            "Anyagcsere",
+            "Immunrendszer",
+            "Női bajok",
+            "Szemészet",
+            "Bőr és nyálkahártya",
+            "Láz és fájdalom",
+            "Roborálás és keringés",
+            "Külsőleges"
+        ];
+
         const novenyekAdatbazis = [
             {
                 nev: "Apróbojtorján (Párlófű)",
                 latinNev: "Agrimonia eupatoria",
                 drog: "Agrimoniae herba",
                 hatoanyagCsoportok: ["Cseranyagok", "Flavonoidok", "Triterpének"],
-                terapia: ["Emésztőrendszer", "Légutak", "Külsőleges"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer", "Légutak", "Szájüreg és torok", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Június – Augusztus (virágzó hajtás)",
                 hatoanyagok: ["Katekines cseranyagok (4-10%)", "Flavonoidok (apigenin, luteolin)", "Kovasav", "Ursolsav"],
                 hatas: "Erős összehúzó (adsztringens), gyulladáscsökkentő, epehajtó, hasmenés elleni és toroköblögető.",
@@ -923,7 +933,7 @@
                 latinNev: "Arnica montana",
                 drog: "Arnicae flos",
                 hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Keserűanyagok"],
-                terapia: ["Külsőleges", "Szív- és érrendszer"],
+                terapia: ["Külsőleges", "Mozgásszervek", "Szív- és érrendszer", "Láz és fájdalom"],
                 gyujtes: "Június – Július (teljesen kinyílt fészekvirágzat)",
                 hatoanyagok: ["Szeszkviterpén-laktonok (helenalin)", "Flavonoidok", "Illóolaj", "Karotinoidok"],
                 hatas: "Kizárólag külsőleg: vérömlenyek felszívódását gyorsító, zúzódás-, rándulás- és gyulladáscsökkentő, fertőtlenítő.",
@@ -947,7 +957,7 @@
                 latinNev: "Cnicus benedictus",
                 drog: "Cardui benedicti herba",
                 hatoanyagCsoportok: ["Keserűanyagok", "Cseranyagok", "Illóolajok"],
-                terapia: ["Emésztőrendszer"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer"],
                 gyujtes: "Június – Augusztus (virágzó felső hajtások, kesztyűben!)",
                 hatoanyagok: ["Knicin (szeszkviterpén-lakton keserűanyag)", "Cseranyagok", "Nyálkaanyag", "Illóolaj"],
                 hatas: "Erős keserűanyag-tartalma révén fokozza a nyál-, gyomornedv- és epetermelést, javítja az emésztést.",
@@ -959,7 +969,7 @@
                 latinNev: "Echinacea purpurea",
                 drog: "Echinaceae purpureae herba / radix",
                 hatoanyagCsoportok: ["Poliszacharidok", "Illóolajok", "Flavonoidok"],
-                terapia: ["Immunrendszer", "Légutak"],
+                terapia: ["Immunrendszer", "Légutak", "Bőr és nyálkahártya"],
                 gyujtes: "Nyár vége (virágzó hajtás), Ősz (gyökér)",
                 hatoanyagok: ["Alkilamidok", "Kávésav-származékok (cikóriasav)", "Immunstimuláns poliszacharidok", "Illóolaj"],
                 hatas: "Nem specifikus immunerősítő, fokozza a fehérvérsejtek fagocita aktivitását, lerövidíti a légúti fertőzéseket.",
@@ -983,7 +993,7 @@
                 latinNev: "Mentha x piperita",
                 drog: "Menthae piperitae folium",
                 hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer", "Idegrendszer", "Légutak"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer", "Idegrendszer", "Légutak", "Láz és fájdalom"],
                 gyujtes: "Június – Augusztus (virágzás előtt vagy kezdetén)",
                 hatoanyagok: ["Illóolaj (35-55% mentol, menton)", "Rozmaringsav (cseranyag)", "Flavonoidok"],
                 hatas: "Simaizom-görcsoldó, epehajtó, szélhajtó, hányinger-csillapító, hűsítő és helyi érzéstelenítő.",
@@ -995,7 +1005,7 @@
                 latinNev: "Centaurea cyanus",
                 drog: "Cyani flos",
                 hatoanyagCsoportok: ["Flavonoidok", "Keserűanyagok", "Antociánok"],
-                terapia: ["Külsőleges", "Emésztőrendszer"],
+                terapia: ["Szemészet", "Bőr és nyálkahártya", "Külsőleges", "Emésztőrendszer"],
                 gyujtes: "Június – Július (csak a kék szélső sugárvirágok)",
                 hatoanyagok: ["Antocián-glikozidok (cianin)", "Flavonoidok", "Keserűanyagok (knicin)", "Nyálkaanyag"],
                 hatas: "Szemgyulladás és kötőhártya-irritáció elleni borogató, enyhe vízhajtó, étvágyjavító és teakeverékek szépítője.",
@@ -1007,7 +1017,7 @@
                 latinNev: "Achillea millefolium / A. collina",
                 drog: "Millefolii herba / flos",
                 hatoanyagCsoportok: ["Illóolajok", "Keserűanyagok", "Flavonoidok", "Cseranyagok"],
-                terapia: ["Emésztőrendszer", "Női bajok", "Külsőleges"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer", "Női bajok", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Június – Szeptember (virágzó hajtás, napsütésben)",
                 hatoanyagok: ["Illóolaj (proazulénből képződő kamazulén)", "Szeszkviterpén-laktonok (achillein)", "Flavonoidok", "Cseranyagok"],
                 hatas: "Gyulladáscsökkentő, görcsoldó, étvágyjavító, epehajtó, vérzéscsillapító és kismedencei keringést szabályozó.",
@@ -1019,7 +1029,7 @@
                 latinNev: "Melissa officinalis",
                 drog: "Melissae folium",
                 hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
-                terapia: ["Idegrendszer", "Emésztőrendszer"],
+                terapia: ["Idegrendszer", "Emésztőrendszer", "Bőr és nyálkahártya"],
                 gyujtes: "Június – Augusztus (virágzás előtt, levelek)",
                 hatoanyagok: ["Illóolaj (citrál, citronellál, geraniol)", "Rozmaringsav", "Flavonoidok", "Triterpének"],
                 hatas: "Idegnyugtató, elalvást segítő, szívidegesség-csillapító, vírusellenes (herpesz) és emésztőrendszeri görcsoldó.",
@@ -1031,7 +1041,7 @@
                 latinNev: "Urtica dioica",
                 drog: "Urticae folium / radix",
                 hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Szterolok"],
-                terapia: ["Húgyutak", "Emésztőrendszer", "Külsőleges"],
+                terapia: ["Húgyutak", "Mozgásszervek", "Anyagcsere", "Emésztőrendszer", "Roborálás és keringés", "Külsőleges"],
                 gyujtes: "Tavasz – Nyár (fiatal levelek), Ősz (gyökér)",
                 hatoanyagok: ["Flavonoidok", "Kovasav", "Káliumsók", "Klorofill", "Béta-szitoszterol (gyökérben)"],
                 hatas: "Erős vízhajtó és vértisztító (köszvény, reuma ellen), roboráló; a gyökere jóindulatú prosztata-megnagyobbodás elleni.",
@@ -1043,7 +1053,7 @@
                 latinNev: "Calluna vulgaris",
                 drog: "Callunae herba",
                 hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Fenolglikozidok"],
-                terapia: ["Húgyutak"],
+                terapia: ["Húgyutak", "Anyagcsere"],
                 gyujtes: "Augusztus – Szeptember (virágzó hajtásvég)",
                 hatoanyagok: ["Arbutin (hidrokinon-glikozid)", "Flavonoidok (kvercitrin)", "Cseranyagok", "Kovasav"],
                 hatas: "Húgyúti fertőtlenítő, vízhajtó, enyhe nyugtató és vértisztító.",
@@ -1055,7 +1065,7 @@
                 latinNev: "Rosa canina",
                 drog: "Cynosbati pseudofructus",
                 hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok"],
-                terapia: ["Immunrendszer", "Húgyutak"],
+                terapia: ["Immunrendszer", "Húgyutak", "Szív- és érrendszer", "Roborálás és keringés"],
                 gyujtes: "Szeptember – Október (az első fagyok előtt, keményen és pirosan)",
                 hatoanyagok: ["C-vitamin (aszkorbinsav, akár 0,5-1%)", "Karotinoidok (likopin, béta-karotin)", "Pektin", "Flavonoidok", "Gyümölcssavak"],
                 hatas: "Immunerősítő, roboráló, érfalvédő és enyhe vízhajtó.",
@@ -1067,7 +1077,7 @@
                 latinNev: "Juglans regia",
                 drog: "Juglandis folium",
                 hatoanyagCsoportok: ["Cseranyagok", "Flavonoidok"],
-                terapia: ["Külsőleges", "Emésztőrendszer"],
+                terapia: ["Bőr és nyálkahártya", "Külsőleges", "Szájüreg és torok", "Emésztőrendszer"],
                 gyujtes: "Június – Július (ép, egészséges levéllemezek levélnyél nélkül)",
                 hatoanyagok: ["Ellagitannin típusú cseranyagok (10%)", "Juglon (naftokinon-származék)", "Flavonoidok", "Illóolaj"],
                 hatas: "Erős összehúzó, gyulladáscsökkentő, antibakteriális és gombaellenes; külsőleg bőrbetegségekre, izzadás ellen, belsőleg hasmenésre.",
@@ -1079,7 +1089,7 @@
                 latinNev: "Glycyrrhiza glabra",
                 drog: "Liquiritiae radix",
                 hatoanyagCsoportok: ["Szaponinok", "Flavonoidok", "Poliszacharidok"],
-                terapia: ["Légutak", "Emésztőrendszer"],
+                terapia: ["Légutak", "Emésztőrendszer", "Bőr és nyálkahártya"],
                 gyujtes: "Ősz (3-4 éves növény gyökere és tarackja)",
                 hatoanyagok: ["Glicirrizin (triterpén-szaponin, 50-szer édesebb a cukornál)", "Likviritin (flavonoid)", "Kumarinok"],
                 hatas: "Kiváló köptető, nyákoldó, gyomor- és nyombélfekély-gyógyító, gyulladáscsökkentő és vírusellenes.",
@@ -1091,7 +1101,7 @@
                 latinNev: "Foeniculum vulgare",
                 drog: "Foeniculi fructus",
                 hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Kumarinok"],
-                terapia: ["Emésztőrendszer", "Légutak"],
+                terapia: ["Emésztőrendszer", "Légutak", "Női bajok"],
                 gyujtes: "Augusztus – Szeptember (érett ikerkaszat termés)",
                 hatoanyagok: ["Illóolaj (transz-anetol, fenkon, esztragol)", "Zsíros olaj", "Flavonoidok"],
                 hatas: "Kiváló szélhajtó, bélgörcsoldó, nyákoldó köptető és tejelválasztást fokozó.",
@@ -1099,11 +1109,23 @@
                 hagyomany: "A középkorban Szent János éjszakáján az ajtó fölé akasztották, hogy távol tartsa a gonosz szellemeket; böjtöléskor az éhségérzetet csillapították vele."
             },
             {
+                nev: "Édesnarancshéj",
+                latinNev: "Citrus sinensis",
+                drog: "Aurantii dulcis pericarpium",
+                hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Keserűanyagok"],
+                terapia: ["Emésztőrendszer", "Idegrendszer", "Szív- és érrendszer"],
+                gyujtes: "Tél – Tavasz (érett gyümölcs külső, narancssárga héja – csak vegyszermentes/kezeletlen héj)",
+                hatoanyagok: ["Illóolaj (D-limonén, linalool)", "Flavonoidok (heszperidin, nobiletin)", "Pektin"],
+                hatas: "Étvágyjavító, szélhajtó, enyhe nyugtató, érfalvédő és emésztést serkentő (különösen keserű és bélnyugtató teakeverékekben).",
+                elkeszites: "Forrázat vagy szárított héj darabolva teakeverékekhez, illetve likőrök és fűszeres kivonatok ízesítésére.",
+                hagyomany: "A mediterrán és közép-európai téli teák, fűszeres főzetek és emésztést segítő keserűk kedvelt aromás és flavonoiddús alapanyaga."
+            },
+            {
                 nev: "Egybibés galagonya",
                 latinNev: "Crataegus monogyna",
                 drog: "Crataegi folium cum flore",
                 hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Triterpének"],
-                terapia: ["Szív- és érrendszer", "Idegrendszer"],
+                terapia: ["Szív- és érrendszer", "Idegrendszer", "Roborálás és keringés"],
                 gyujtes: "Április – Május (virágos hajtásvég), Ősz (termés)",
                 hatoanyagok: ["Oligomer procianidinek (OPC)", "Flavonoidok (hiperozid, vitexin)", "Triterpénsavak"],
                 hatas: "Javítja a szívizom vérellátását és oxigénellátását, szabályozza a szívritmust, enyhén csökkenti a vérnyomást.",
@@ -1115,7 +1137,7 @@
                 latinNev: "Malva sylvestris",
                 drog: "Malvae folium / flos",
                 hatoanyagCsoportok: ["Nyálkaanyagok", "Antociánok", "Flavonoidok"],
-                terapia: ["Légutak", "Emésztőrendszer", "Külsőleges"],
+                terapia: ["Légutak", "Szájüreg és torok", "Emésztőrendszer", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Június – Augusztus (levél és virág)",
                 hatoanyagok: ["Savanyú nyálkaanyagok (8-10%)", "Malvin (antocián)", "Flavonoidok", "Cseranyagok"],
                 hatas: "Nyálkahártya-bevonó, száraz köhögést és rekedtséget csillapító, gyomor- és bélgyulladást enyhítő.",
@@ -1127,7 +1149,7 @@
                 latinNev: "Centaurium erythraea",
                 drog: "Centaurii herba",
                 hatoanyagCsoportok: ["Keserűanyagok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer"],
                 gyujtes: "Július – Augusztus (virágzó föld feletti hajtás)",
                 hatoanyagok: ["Szekoiridoid keserűanyagok (szverciamarin, genciopikrozid, centapikrin)", "Xantonok", "Flavonoidok"],
                 hatas: "Tiszta keserűanyag (amara pura): fokozza a gyomornedv- és epetermelést, étvágyjavító és májműködést serkentő.",
@@ -1139,7 +1161,7 @@
                 latinNev: "Lamium album",
                 drog: "Lamii albi flos / herba",
                 hatoanyagCsoportok: ["Nyálkaanyagok", "Cseranyagok", "Flavonoidok", "Szaponinok"],
-                terapia: ["Női bajok", "Légutak", "Húgyutak"],
+                terapia: ["Női bajok", "Légutak", "Húgyutak", "Bőr és nyálkahártya"],
                 gyujtes: "Május – Július (a fehér párta a csésze nélkül kicsípve)",
                 hatoanyagok: ["Iridoid-glikozidok (lamalbid)", "Nyálkaanyagok", "Cseranyagok", "Szaponinok", "Flavonoidok"],
                 hatas: "Nőgyógyászati gyulladáscsökkentő (fehérfolyás ellen), nyákoldó légúti hurutokban és enyhe húgyúti fertőtlenítő.",
@@ -1151,7 +1173,7 @@
                 latinNev: "Viscum album",
                 drog: "Visci stipes",
                 hatoanyagCsoportok: ["Poliszacharidok", "Flavonoidok"],
-                terapia: ["Szív- és érrendszer", "Immunrendszer"],
+                terapia: ["Szív- és érrendszer", "Immunrendszer", "Roborálás és keringés"],
                 gyujtes: "November – Március (leveles, vékony hajtások, bogyók nélkül!)",
                 hatoanyagok: ["Viszkotoxinok (polipeptidek)", "Lektinek", "Flavonoidok", "Biogén aminok"],
                 hatas: "Vérnyomáscsökkentő, érelmeszesedést gátló, immunmoduláns (injekciós készítményekben daganatterápiás kiegészítő).",
@@ -1163,7 +1185,7 @@
                 latinNev: "Betula pendula",
                 drog: "Betulae folium",
                 hatoanyagCsoportok: ["Flavonoidok", "Szaponinok", "Illóolajok"],
-                terapia: ["Húgyutak", "Külsőleges"],
+                terapia: ["Húgyutak", "Mozgásszervek", "Roborálás és keringés", "Külsőleges"],
                 gyujtes: "Május – Június (fiatal, még ragacsos levelek)",
                 hatoanyagok: ["Flavonoidok (hiperozid, kvercitrin)", "Triterpén-szaponinok", "Illóolaj", "Káliumsók"],
                 hatas: "Kiváló vesekímélő vízhajtó (átöblítő terápia vesehomok és húgyúti fertőzések esetén), reumaellenes.",
@@ -1175,7 +1197,7 @@
                 latinNev: "Artemisia absinthium",
                 drog: "Absinthii herba",
                 hatoanyagCsoportok: ["Keserűanyagok", "Illóolajok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer"],
                 gyujtes: "Július – Augusztus (virágzó hajtásvég)",
                 hatoanyagok: ["Abszintin, artabszin (rendkívül keserű szeszkviterpén-laktonok)", "Illóolaj (tujon, kamazulén)", "Flavonoidok"],
                 hatas: "Az egyik legerősebb keserűanyag-tartalmú gyomorerősítő, epehajtó, étvágyjavító és bélféregűző.",
@@ -1187,7 +1209,7 @@
                 latinNev: "Vaccinium myrtillus",
                 drog: "Myrtilli fructus / folium",
                 hatoanyagCsoportok: ["Cseranyagok", "Antociánok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer", "Szív- és érrendszer"],
+                terapia: ["Emésztőrendszer", "Szemészet", "Szív- és érrendszer", "Roborálás és keringés"],
                 gyujtes: "Július – Augusztus (érett termés), Nyár (levél)",
                 hatoanyagok: ["Katekines cseranyagok (5-10%)", "Antociánok (mirtillin)", "Flavonoidok", "Pektin"],
                 hatas: "A szárított termés kiváló hasmenés elleni szer; az antociánok védik a hajszálereket és javítják a szem ideghártyájának keringését.",
@@ -1199,7 +1221,7 @@
                 latinNev: "Sambucus nigra",
                 drog: "Sambuci flos",
                 hatoanyagCsoportok: ["Flavonoidok", "Illóolajok", "Nyálkaanyagok"],
-                terapia: ["Légutak", "Immunrendszer"],
+                terapia: ["Légutak", "Immunrendszer", "Láz és fájdalom"],
                 gyujtes: "Május – Június (teljesen kinyílt virágzat száraz időben)",
                 hatoanyagok: ["Flavonoidok (rutin, izokvercitrin, szambucin)", "Fenolsavak", "Nyálkaanyag", "Illóolaj"],
                 hatas: "Kiváló izzasztó, lázcsillapító, köptető és immunerősítő meghűléses betegségekben.",
@@ -1211,7 +1233,7 @@
                 latinNev: "Symphytum officinale",
                 drog: "Symphyti radix",
                 hatoanyagCsoportok: ["Nyálkaanyagok", "Cseranyagok", "Alkaloidok"],
-                terapia: ["Külsőleges"],
+                terapia: ["Mozgásszervek", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Kora tavasz vagy Ősz (gyökér)",
                 hatoanyagok: ["Allantoin (sejtregeneráló)", "Nyálkaanyagok", "Rozmaringsav", "Pirrolizidin-alkaloidok"],
                 hatas: "Kizárólag külsőleg: csonttörések, zúzódások, rándulások, ízületi gyulladások gyógyulását gyorsítja.",
@@ -1223,7 +1245,7 @@
                 latinNev: "Ribes nigrum",
                 drog: "Ribis nigri folium",
                 hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Illóolajok"],
-                terapia: ["Húgyutak", "Szív- és érrendszer"],
+                terapia: ["Húgyutak", "Mozgásszervek", "Anyagcsere", "Szív- és érrendszer"],
                 gyujtes: "Június – Július (teljesen kifejlett, egészséges levelek)",
                 hatoanyagok: ["Flavonoidok (rutin, kvercetin)", "Proantocianidinek", "Illóolaj", "C-vitamin (bogyóban)"],
                 hatas: "Vízhajtó, reuma- és köszvényellenes (fokozza a húgysav ürítését), gyulladáscsökkentő.",
@@ -1235,7 +1257,7 @@
                 latinNev: "Artemisia vulgaris",
                 drog: "Artemisiae herba",
                 hatoanyagCsoportok: ["Illóolajok", "Keserűanyagok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer", "Női bajok"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer", "Női bajok"],
                 gyujtes: "Július – Augusztus (virágzó felső hajtásvég)",
                 hatoanyagok: ["Illóolaj (cineol, kámfor, tujon - kevesebb mint a fehér ürömben)", "Szeszkviterpén-laktonok", "Flavonoidok"],
                 hatas: "Étvágyjavító, epehajtó, görcsoldó és menstruációt megindító; ázsiai rokona a moxaterápia alapanyaga.",
@@ -1243,11 +1265,23 @@
                 hagyomany: "A római katonák a sarujukba tették menetelés előtt, hogy ne fáradjon el a lábuk; Szent János-éji varázsnövényként is tisztelték."
             },
             {
+                nev: "Fodormenta",
+                latinNev: "Mentha spicata",
+                drog: "Menthae crispae folium",
+                hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer", "Légutak", "Idegrendszer"],
+                gyujtes: "Június – Augusztus (virágzás előtt vagy kezdetén, levelek)",
+                hatoanyagok: ["Illóolaj (L-karvon, limonén, alig tartalmaz mentolt)", "Rozmaringsav", "Flavonoidok"],
+                hatas: "Kíméletesebb emésztésserkentő, szélhajtó és simaizom-görcsoldó, mint a borsmenta; menta-allergiások vagy gyermekek körében is kedvelt alternatíva.",
+                elkeszites: "Forrázat (1 teáskanál/csésze, lefedve 8-10 percig állni hagyni).",
+                hagyomany: "A népi kertek és teakeverékek klasszikus mentája, amely enyhébb, fűszeresebb aromájával a gyomornyugtató teák gyakori alkotója."
+            },
+            {
                 nev: "Fokhagyma (Kerti fokhagyma)",
                 latinNev: "Allium sativum",
                 drog: "Allii sativi bulbus",
                 hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Szaponinok"],
-                terapia: ["Szív- és érrendszer", "Emésztőrendszer", "Immunrendszer"],
+                terapia: ["Szív- és érrendszer", "Anyagcsere", "Emésztőrendszer", "Immunrendszer", "Roborálás és keringés"],
                 gyujtes: "Július (a szár elszáradásakor, érett hagymagerezdek)",
                 hatoanyagok: ["Alliin (amelyből aprításkor alliináz enzim hatására allicin képződik)", "Ajoén, vinilditiinek", "Flavonoidok", "Szaponinok"],
                 hatas: "Vérnyomást és vérzsírszintet mérséklő, érelmeszesedést gátló, antibakteriális, gombaellenes és bélflórát támogató.",
@@ -1259,7 +1293,7 @@
                 latinNev: "Fumaria officinalis",
                 drog: "Fumariae herba",
                 hatoanyagCsoportok: ["Alkaloidok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer"],
+                terapia: ["Máj- és eperendszer", "Emésztőrendszer"],
                 gyujtes: "Május – Július (virágzó föld feletti hajtás)",
                 hatoanyagok: ["Izokinolin-alkaloidok (protopin, fumarin)", "Flavonoidok", "Fumársav"],
                 hatas: "Amfokoleretikus epeszabályozó: ha kevés az epe, fokozza a termelését, ha túl sok, csökkenti; oldja az epeutak görcsét.",
@@ -1283,7 +1317,7 @@
                 latinNev: "Salix purpurea / S. alba",
                 drog: "Salicis cortex",
                 hatoanyagCsoportok: ["Fenolglikozidok", "Cseranyagok", "Flavonoidok"],
-                terapia: ["Szív- és érrendszer", "Külsőleges"],
+                terapia: ["Mozgásszervek", "Szív- és érrendszer", "Láz és fájdalom", "Külsőleges"],
                 gyujtes: "Tavasz (2-3 éves, sima kéregű hajtások kérge)",
                 hatoanyagok: ["Szalicin (fenolglikozid, amely a szervezetben szalicilsavvá alakul)", "Cseranyagok (8-20%)", "Flavonoidok"],
                 hatas: "Gyulladáscsökkentő, fájdalom- és lázcsillapító (ízületi, derék- és meghűléses panaszokra).",
@@ -1295,7 +1329,7 @@
                 latinNev: "Tanacetum vulgare",
                 drog: "Tanaceti flos / herba",
                 hatoanyagCsoportok: ["Illóolajok", "Keserűanyagok", "Flavonoidok"],
-                terapia: ["Külsőleges"],
+                terapia: ["Külsőleges", "Mozgásszervek"],
                 gyujtes: "Július – Szeptember (virágzat)",
                 hatoanyagok: ["Illóolaj (magas béta-tujon tartalom!)", "Partenolid (szeszkviterpén-lakton)", "Flavonoidok"],
                 hatas: "Rovarriasztó, külsőleg parazitaellenes és reumaellenes bedörzsölő.",
@@ -1307,7 +1341,7 @@
                 latinNev: "Trigonella foenum-graecum",
                 drog: "Foenugraeci semen",
                 hatoanyagCsoportok: ["Nyálkaanyagok", "Szaponinok", "Alkaloidok"],
-                terapia: ["Emésztőrendszer", "Külsőleges"],
+                terapia: ["Anyagcsere", "Emésztőrendszer", "Roborálás és keringés", "Női bajok", "Külsőleges"],
                 gyujtes: "Augusztus (érett hüvelyekből kifejtett mag)",
                 hatoanyagok: ["Galaktomannán nyálkaanyag (25-40%)", "Szteroid-szaponinok (diozgenin)", "Trigonellin", "Fehérjék"],
                 hatas: "Roboráló, étvágyjavító, vércukor- és koleszterinszint-csökkentő, tejelválasztást fokozó; külsőleg kelések érlelésére.",
@@ -1319,7 +1353,7 @@
                 latinNev: "Taraxacum officinale",
                 drog: "Taraxaci radix cum herba",
                 hatoanyagCsoportok: ["Keserűanyagok", "Flavonoidok", "Poliszacharidok"],
-                terapia: ["Emésztőrendszer", "Húgyutak"],
+                terapia: ["Máj- és eperendszer", "Emésztőrendszer", "Anyagcsere", "Húgyutak"],
                 gyujtes: "Tavasz (levél, virág), Ősz (gyökér)",
                 hatoanyagok: ["Szeszkviterpén-lakton keserűanyagok (taraxacin)", "Inulin (ősszel akár 40%)", "Flavonoidok", "Kálium"],
                 hatas: "Erős epehajtó, májműködést serkentő, étvágyjavító és káliumpótló vízhajtó (nem üríti ki a káliumot).",
@@ -1331,7 +1365,7 @@
                 latinNev: "Geum urbanum",
                 drog: "Gei urbani rhizoma",
                 hatoanyagCsoportok: ["Cseranyagok", "Illóolajok", "Keserűanyagok"],
-                terapia: ["Emésztőrendszer", "Külsőleges"],
+                terapia: ["Emésztőrendszer", "Szájüreg és torok", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Ősz vagy Tavasz (gyökértörzs)",
                 hatoanyagok: ["Ellagitannin és katekines cseranyagok (10-20%)", "Gein glikozid (ebből enzimesen eugenol szabadul fel)", "Keserűanyag"],
                 hatas: "Erős összehúzó, hasmenés elleni, gyomor- és bélhurut-csillapító, fogínygyulladás elleni öblögető.",
@@ -1343,7 +1377,7 @@
                 latinNev: "Tilia cordata / T. platyphyllos",
                 drog: "Tiliae flos",
                 hatoanyagCsoportok: ["Flavonoidok", "Nyálkaanyagok", "Illóolajok"],
-                terapia: ["Légutak", "Idegrendszer"],
+                terapia: ["Légutak", "Idegrendszer", "Láz és fájdalom"],
                 gyujtes: "Június (teljesen kinyílt virágzat a murvalevéllel együtt)",
                 hatoanyagok: ["Flavonoidok (kvercitrin, tilirozid)", "Nyálkaanyagok", "Illóolaj (farnezol)", "Cseranyagok"],
                 hatas: "Izzasztó, lázcsillapító, köhögéscsillapító, nyálkahártya-nyugtató és enyhe idegnyugtató.",
@@ -1355,7 +1389,7 @@
                 latinNev: "Helichrysum arenarium",
                 drog: "Helichrysi flos",
                 hatoanyagCsoportok: ["Flavonoidok", "Keserűanyagok", "Illóolajok"],
-                terapia: ["Emésztőrendszer"],
+                terapia: ["Máj- és eperendszer", "Emésztőrendszer"],
                 gyujtes: "Július – Augusztus (teljesen ki nem nyílt virágzat)",
                 hatoanyagok: ["Flavonoidok (izoszaliperpozid, naringenin)", "Keserűanyagok", "Illóolaj", "Ftálidok"],
                 hatas: "Kifejezett epehajtó, májvédő, görcsoldó és emésztésserkentő.",
@@ -1367,7 +1401,7 @@
                 latinNev: "Hippophae rhamnoides",
                 drog: "Hippophae fructus",
                 hatoanyagCsoportok: ["Flavonoidok", "Poliszacharidok"],
-                terapia: ["Immunrendszer", "Külsőleges", "Szív- és érrendszer"],
+                terapia: ["Immunrendszer", "Máj- és eperendszer", "Bőr és nyálkahártya", "Roborálás és keringés", "Külsőleges", "Szív- és érrendszer"],
                 gyujtes: "Augusztus vége – Október (érett narancssárga álbogyók)",
                 hatoanyagok: ["C-vitamin (akár 200-800 mg/100g)", "Karotinoidok (béta-karotin, zeaxantin)", "E-vitamin", "Palmitoleinsav (omega-7)"],
                 hatas: "Kiemelkedő immunerősítő, roboráló, májvédő, hámosító és sugárvédő.",
@@ -1379,7 +1413,7 @@
                 latinNev: "Pimpinella anisum",
                 drog: "Anisi fructus",
                 hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Kumarinok"],
-                terapia: ["Légutak", "Emésztőrendszer"],
+                terapia: ["Légutak", "Emésztőrendszer", "Női bajok"],
                 gyujtes: "Augusztus (érett termés)",
                 hatoanyagok: ["Illóolaj (80-95% transz-anetol, metil-kavikol)", "Kumarinok", "Flavonoidok"],
                 hatas: "Kiváló köptető (serkenti a légúti csillószőrök mozgását), szélhajtó, görcsoldó és tejelválasztást fokozó.",
@@ -1391,7 +1425,7 @@
                 latinNev: "Ononis spinosa",
                 drog: "Ononidis radix",
                 hatoanyagCsoportok: ["Flavonoidok", "Szaponinok", "Illóolajok"],
-                terapia: ["Húgyutak"],
+                terapia: ["Húgyutak", "Mozgásszervek"],
                 gyujtes: "Ősz (gyökér)",
                 hatoanyagok: ["Izoflavonoidok (ononín, formononetin)", "Onocerin (triterpén)", "Illóolaj", "Cseranyagok"],
                 hatas: "Kiváló vizelethajtó (átöblítő terápia vesehomok és húgyúti gyulladások esetén), köszvény- és reumaellenes.",
@@ -1415,7 +1449,7 @@
                 latinNev: "Matricaria chamomilla / M. recutita",
                 drog: "Chamomillae anthodium",
                 hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Kumarinok", "Nyálkaanyagok"],
-                terapia: ["Emésztőrendszer", "Légutak", "Külsőleges"],
+                terapia: ["Emésztőrendszer", "Légutak", "Szájüreg és torok", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Május – Június (teljesen kinyílt fészekvirágzat, száraz időben)",
                 hatoanyagok: ["Illóolaj (alfa-bizabolol, matricinból képződő kamazulén)", "Flavonoidok (apigenin)", "Kumarinok (herniarin, umbelliferon)", "Nyálkaanyag"],
                 hatas: "Sokoldalú gyulladáscsökkentő, görcsoldó, szélhajtó, nyálkahártya-védő, antibakteriális és sebgyógyító.",
@@ -1439,7 +1473,7 @@
                 latinNev: "Anethum graveolens",
                 drog: "Anethi fructus / herba",
                 hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Kumarinok"],
-                terapia: ["Emésztőrendszer"],
+                terapia: ["Emésztőrendszer", "Női bajok"],
                 gyujtes: "Június – Július (hajtás), Augusztus – Szeptember (érett termés)",
                 hatoanyagok: ["Illóolaj (karvon, limonén, dillapiol)", "Flavonoidok", "Kumarinok"],
                 hatas: "Szélhajtó, görcsoldó, emésztésjavító, antibakteriális és szoptatós anyáknál tejelválasztást serkentő.",
@@ -1475,7 +1509,7 @@
                 latinNev: "Thymus vulgaris",
                 drog: "Thymi herba",
                 hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
-                terapia: ["Légutak", "Emésztőrendszer"],
+                terapia: ["Légutak", "Szájüreg és torok", "Emésztőrendszer"],
                 gyujtes: "Május – Július (virágzó hajtás)",
                 hatoanyagok: ["Illóolaj (timol, karvakrol)", "Rozmaringsav", "Flavonoidok", "Triterpének"],
                 hatas: "Az egyik legerősebb természetes fertőtlenítő, köptető, hörgőgörcsoldó és emésztésserkentő.",
@@ -1487,7 +1521,7 @@
                 latinNev: "Ruta graveolens",
                 drog: "Rutae herba",
                 hatoanyagCsoportok: ["Flavonoidok", "Illóolajok", "Kumarinok", "Alkaloidok"],
-                terapia: ["Szív- és érrendszer", "Emésztőrendszer"],
+                terapia: ["Szív- és érrendszer", "Máj- és eperendszer", "Emésztőrendszer"],
                 gyujtes: "Június – Július (virágzás előtt, kesztyűben!)",
                 hatoanyagok: ["Rutin (flavonoid-glikozid, akár 2%)", "Illóolaj (metil-nonil-keton)", "Furanokumarinok (bergaptén)", "Kinolin-alkaloidok"],
                 hatas: "Hajszálér-erősítő, vérnyomáscsökkentő, simaizom-görcsoldó és epehajtó.",
@@ -1511,7 +1545,7 @@
                 latinNev: "Prunus spinosa",
                 drog: "Pruni spinosae flos / fructus",
                 hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Antociánok"],
-                terapia: ["Emésztőrendszer", "Húgyutak"],
+                terapia: ["Emésztőrendszer", "Anyagcsere", "Húgyutak"],
                 gyujtes: "Április (virág), Október – November (megcsípett, érett termés)",
                 hatoanyagok: ["Flavonoidok (kempferol, kvercetin - virágban)", "Cseranyagok (termésben)", "Antociánok", "C-vitamin"],
                 hatas: "A virág enyhe hashajtó, vízhajtó és anyagcsere-fokozó; a fanyar termés viszont összehúzó és hasmenés elleni!",
@@ -1535,7 +1569,7 @@
                 latinNev: "Calendula officinalis",
                 drog: "Calendulae flos",
                 hatoanyagCsoportok: ["Flavonoidok", "Szaponinok", "Illóolajok"],
-                terapia: ["Külsőleges", "Emésztőrendszer"],
+                terapia: ["Bőr és nyálkahártya", "Külsőleges", "Emésztőrendszer"],
                 gyujtes: "Június – Szeptember (teljesen kinyílt narancssárga virágzat)",
                 hatoanyagok: ["Triterpén-szaponinok (kalendulozidok)", "Flavonoidok", "Karotinoidok", "Illóolaj"],
                 hatas: "Hámosító, sebgyógyító, gyulladáscsökkentő, gombaellenes; belsőleg gyomor- és nyombélfekély esetén védő hatású.",
@@ -1559,7 +1593,7 @@
                 latinNev: "Phaseolus vulgaris",
                 drog: "Phaseoli pericarpium (legumen)",
                 hatoanyagCsoportok: ["Flavonoidok", "Szaponinok", "Poliszacharidok"],
-                terapia: ["Húgyutak", "Szív- és érrendszer"],
+                terapia: ["Húgyutak", "Anyagcsere", "Szív- és érrendszer"],
                 gyujtes: "Augusztus – Szeptember (mag nélküli, érett, szárított hüvelyhéj)",
                 hatoanyagok: ["Flavonoidok", "Káliumsók", "Trigonellin és krómvegyületek", "Növényi rostok és szaponinok"],
                 hatas: "Kíméletes vizelethajtó (húgyúti átöblítő teákban) és a szénhidrát-anyagcsere kiegészítő támogatója.",
@@ -1571,7 +1605,7 @@
                 latinNev: "Arctium lappa",
                 drog: "Bardanae radix",
                 hatoanyagCsoportok: ["Poliszacharidok", "Keserűanyagok", "Illóolajok"],
-                terapia: ["Emésztőrendszer", "Külsőleges", "Húgyutak"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer", "Anyagcsere", "Bőr és nyálkahártya", "Külsőleges", "Húgyutak"],
                 gyujtes: "Ősz (elsőéves növény gyökere)",
                 hatoanyagok: ["Inulin (akár 45-50%)", "Poliacetilének (arktiin - antibakteriális)", "Keserűanyagok", "Nyálkaanyag"],
                 hatas: "Vértisztító, epe- és vízhajtó, vércukorszint-csökkentő (inulin); külsőleg ekcéma, pikkelysömör és hajhullás ellen kiváló.",
@@ -1583,7 +1617,7 @@
                 latinNev: "Juniperus communis",
                 drog: "Juniperi galbulus (fructus)",
                 hatoanyagCsoportok: ["Illóolajok", "Flavonoidok", "Cseranyagok"],
-                terapia: ["Húgyutak", "Emésztőrendszer"],
+                terapia: ["Húgyutak", "Mozgásszervek", "Emésztőrendszer"],
                 gyujtes: "Ősz (második évben beérett, kékesfekete tobozbogyók)",
                 hatoanyagok: ["Illóolaj (alfa-pinén, terpinén-4-ol, mircén)", "Flavonoidok", "Cseranyagok", "Invertcukor (30%)"],
                 hatas: "Erős vizelethajtó (fokozza a vesék vérellátását), emésztésjavító, szélhajtó és reumaellenes.",
@@ -1619,7 +1653,7 @@
                 latinNev: "Verbena officinalis",
                 drog: "Verbenae herba",
                 hatoanyagCsoportok: ["Keserűanyagok", "Flavonoidok", "Cseranyagok"],
-                terapia: ["Légutak", "Emésztőrendszer", "Idegrendszer"],
+                terapia: ["Légutak", "Máj- és eperendszer", "Emésztőrendszer", "Idegrendszer"],
                 gyujtes: "Június – Augusztus (virágzó föld feletti hajtás)",
                 hatoanyagok: ["Iridoid-glikozidok (verbenalin, hasztatozid)", "Kávésav-származékok (verbakozid)", "Flavonoidok", "Illóolaj"],
                 hatas: "Nyákoldó (különösen arcüreggyulladás esetén), epehajtó, étvágyjavító, enyhe nyugtató és tejelválasztást serkentő.",
@@ -1631,7 +1665,7 @@
                 latinNev: "Zea mays",
                 drog: "Maydis stigma",
                 hatoanyagCsoportok: ["Flavonoidok", "Szaponinok", "Cseranyagok"],
-                terapia: ["Húgyutak"],
+                terapia: ["Húgyutak", "Máj- és eperendszer"],
                 gyujtes: "Július – Augusztus (a megtermékenyítés előtti, még üde bibeszálak)",
                 hatoanyagok: ["Káliumsók", "Szaponinok", "Flavonoidok (maizin)", "Cseranyagok", "Allantoin", "K-vitamin"],
                 hatas: "Kiváló, kíméletes vízhajtó (húgyúti homok, hólyaghurut és ödéma esetén), enyhe epehajtó.",
@@ -1655,7 +1689,7 @@
                 latinNev: "Plantago lanceolata",
                 drog: "Plantaginis lanceolatae folium",
                 hatoanyagCsoportok: ["Nyálkaanyagok", "Cseranyagok", "Flavonoidok", "Keserűanyagok"],
-                terapia: ["Légutak", "Külsőleges"],
+                terapia: ["Légutak", "Szájüreg és torok", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Május – Szeptember (ép, foltmentes levelek, gyorsan szárítva, nehogy megbarnuljanak!)",
                 hatoanyagok: ["Nyálkaanyagok", "Iridoid-glikozidok (aukubin, katalpol - antibakteriális)", "Kovasav", "Cseranyagok", "Flavonoidok"],
                 hatas: "Kiváló nyálkahártya-bevonó, köhögéscsillapító, légúti fertőtlenítő; külsőleg rovarcsípésre, sebekre vérzéscsillapító.",
@@ -1667,7 +1701,7 @@
                 latinNev: "Linum usitatissimum",
                 drog: "Lini semen",
                 hatoanyagCsoportok: ["Nyálkaanyagok", "Poliszacharidok"],
-                terapia: ["Emésztőrendszer", "Külsőleges"],
+                terapia: ["Emésztőrendszer", "Anyagcsere", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Augusztus (érett toktermésből kicsépelt mag)",
                 hatoanyagok: ["Nyálkaanyagok (3-10% a maghéjban)", "Zsíros olaj (30-40%, alfa-linolénsav - omega-3)", "Lignánok (fitoösztrogének)", "Fehérjék"],
                 hatas: "Kíméletes térfogatnövelő hashajtó, gyomor- és bélnyálkahártya-védő; külsőleg meleg pépes borogatásként kelésekre.",
@@ -1691,7 +1725,7 @@
                 latinNev: "Lavandula angustifolia",
                 drog: "Lavandulae flos",
                 hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok", "Kumarinok"],
-                terapia: ["Idegrendszer", "Emésztőrendszer", "Külsőleges"],
+                terapia: ["Idegrendszer", "Emésztőrendszer", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Június – Július (a virágzás kezdetén, amikor az alsó virágok kinyíltak)",
                 hatoanyagok: ["Illóolaj (linalil-acetát, linalool - kámfort alig tartalmaz!)", "Rozmaringsav", "Kumarinok", "Flavonoidok"],
                 hatas: "Nyugtató, szorongásoldó, elalvást segítő, ideges gyomorpanaszokat enyhítő és antibakteriális.",
@@ -1703,7 +1737,7 @@
                 latinNev: "Valeriana officinalis",
                 drog: "Valerianae radix",
                 hatoanyagCsoportok: ["Illóolajok", "Keserűanyagok", "Alkaloidok"],
-                terapia: ["Idegrendszer"],
+                terapia: ["Idegrendszer", "Szív- és érrendszer"],
                 gyujtes: "Ősz (gyökértörzs és járulékos gyökerek)",
                 hatoanyagok: ["Szeszkviterpének (valerénsav - gátolja a GABA lebomlását)", "Valepotriátok", "Illóolaj (bornil-acetát)", "Lignánok"],
                 hatas: "Természetes nyugtató, feszültségoldó, elalvást segítő (nappali álmosság nélkül) és ideges szívpanaszokat csillapító.",
@@ -1715,7 +1749,7 @@
                 latinNev: "Majorana hortensis / Origanum majorana",
                 drog: "Majoranae herba",
                 hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer", "Légutak"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer", "Légutak", "Külsőleges"],
                 gyujtes: "Július – Szeptember (virágzó föld feletti hajtás)",
                 hatoanyagok: ["Illóolaj (terpinén-4-ol, cisz-szabinénhidrát)", "Rozmaringsav (10%)", "Arbutin", "Flavonoidok"],
                 hatas: "Étvágyjavító, szélhajtó, gyomor- és bélgörcsoldó, epehajtó; külsőleg kenőcsként csecsemők és felnőttek náthájára.",
@@ -1727,7 +1761,7 @@
                 latinNev: "Rubus idaeus",
                 drog: "Rubi idaei folium",
                 hatoanyagCsoportok: ["Cseranyagok", "Flavonoidok"],
-                terapia: ["Női bajok", "Emésztőrendszer", "Légutak"],
+                terapia: ["Női bajok", "Szájüreg és torok", "Emésztőrendszer", "Légutak"],
                 gyujtes: "Május – Június (ép, fiatal levelek)",
                 hatoanyagok: ["Ellagitannin cseranyagok", "Flavonoidok", "Szerves savak", "Ásványi anyagok"],
                 hatas: "Enyhe összehúzó, gyulladáscsökkentő és a simaizmok tónusát befolyásoló; hagyományosan női teakeverékekben és enyhe emésztési panaszokra használják.",
@@ -1739,7 +1773,7 @@
                 latinNev: "Silybum marianum",
                 drog: "Cardui mariani fructus",
                 hatoanyagCsoportok: ["Flavonoidok"],
-                terapia: ["Emésztőrendszer"],
+                terapia: ["Máj- és eperendszer", "Emésztőrendszer"],
                 gyujtes: "Augusztus – Szeptember (érett kaszattermés)",
                 hatoanyagok: ["Szilimarin komplex (szilibinin, szilikrisztin, szilidianin - flavonolignánok)", "Zsíros olaj"],
                 hatas: "Májsejt-regeneráló, stabilizálja a májsejtek membránját, gátolja a méreganyagok bejutását és fokozza a fehérjeszintézist.",
@@ -1751,7 +1785,7 @@
                 latinNev: "Tussilago farfara",
                 drog: "Farfarae folium",
                 hatoanyagCsoportok: ["Nyálkaanyagok", "Cseranyagok", "Flavonoidok", "Alkaloidok"],
-                terapia: ["Légutak"],
+                terapia: ["Légutak", "Szájüreg és torok"],
                 gyujtes: "Május – Június (fiatal, ép levelek)",
                 hatoanyagok: ["Savanyú nyálkaanyagok (7-10%)", "Cseranyagok", "Flavonoidok", "Nyomokban pirrolizidin-alkaloidok (szenkirkin)"],
                 hatas: "Kiváló köhögéscsillapító és nyálkahártya-bevonó makacs, száraz köhögés és rekedtség esetén.",
@@ -1763,7 +1797,7 @@
                 latinNev: "Allium ursinum",
                 drog: "Allii ursini herba / bulbus",
                 hatoanyagCsoportok: ["Illóolajok", "Flavonoidok"],
-                terapia: ["Szív- és érrendszer", "Emésztőrendszer"],
+                terapia: ["Szív- és érrendszer", "Anyagcsere", "Emésztőrendszer", "Roborálás és keringés"],
                 gyujtes: "Március – Április (virágzás előtt, friss levelek – vigyázat, a mérgező gyöngyvirággal könnyen összetéveszthető!)",
                 hatoanyagok: ["Kéntartalmú vegyületek (alliinból keletkező allicin, ajoén)", "Flavonoidok", "C-vitamin", "Adenozin"],
                 hatas: "Vérnyomáscsökkentő, érelmeszesedést gátló, koleszterinszint-csökkentő és bélfertőtlenítő.",
@@ -1787,7 +1821,7 @@
                 latinNev: "Cichorium intybus",
                 drog: "Cichorii radix / herba",
                 hatoanyagCsoportok: ["Keserűanyagok", "Poliszacharidok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer", "Húgyutak"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer", "Anyagcsere", "Húgyutak"],
                 gyujtes: "Ősz (gyökér), Július – Augusztus (virágzó hajtás)",
                 hatoanyagok: ["Inulin (gyökérben akár 40%)", "Szeszkviterpén-lakton keserűanyagok (laktucin, laktukopikrin)", "Flavonoidok", "Cseranyagok"],
                 hatas: "Étvágyjavító, epehajtó, májműködést támogató, emésztésserkentő és kíméletes vízhajtó.",
@@ -1795,11 +1829,23 @@
                 hagyomany: "A magyar népi gyógyászat és háztartás egyik legismertebb növénye; pörkölt gyökeréből készítették a klasszikus pótkávét ('cikória')."
             },
             {
+                nev: "Mezei szil (Szilfakéreg)",
+                latinNev: "Ulmus minor",
+                drog: "Ulmi cortex",
+                hatoanyagCsoportok: ["Cseranyagok", "Nyálkaanyagok", "Flavonoidok"],
+                terapia: ["Emésztőrendszer", "Bőr és nyálkahártya", "Külsőleges"],
+                gyujtes: "Kora tavasz (fiatal, sima ágak kérge – erdészeti és természetvédelmi szabályok betartásával)",
+                hatoanyagok: ["Cseranyagok", "Nyálkaanyagok", "Flavonoidok", "FitSzterolok"],
+                hatas: "Összehúzó, nyálkahártya-kímélő és gyulladáscsökkentő; hagyományosan hasmenés, bélhurut és külsőleg bőrkiütések, sebek lemosására használják.",
+                elkeszites: "Főzet (1 teáskanál aprított kéreg/csésze, 5-10 perc főzés) belsőleg vagy külsőleg borogatásra.",
+                hagyomany: "A népi gyógyászatban a szilfa kérgét hasmenés és bőrkiütések ellen főzték, a kemény faanyagát pedig szerszámnyelekhez, kocsikhoz használták."
+            },
+            {
                 nev: "Mezei zsurló",
                 latinNev: "Equisetum arvense",
                 drog: "Equiseti herba",
                 hatoanyagCsoportok: ["Flavonoidok", "Szaponinok"],
-                terapia: ["Húgyutak", "Külsőleges"],
+                terapia: ["Húgyutak", "Mozgásszervek", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Június – Augusztus (meddő, zöld nyári hajtások – a mérgező mocsári zsurlótól pontosan el kell különíteni!)",
                 hatoanyagok: ["Kovasav (8-10%, részben vízoldékony szilikátok formájában)", "Flavonoidok (kvercetin, kempferol)", "Szaponinok", "Káliumsók"],
                 hatas: "Kiváló vizelethajtó, kötőszövet-, köröm- és hajerősítő, csontregenerációt segítő és vérzéscsillapító.",
@@ -1811,7 +1857,7 @@
                 latinNev: "Hypericum perforatum",
                 drog: "Hyperici herba",
                 hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Illóolajok"],
-                terapia: ["Idegrendszer", "Emésztőrendszer", "Külsőleges"],
+                terapia: ["Idegrendszer", "Emésztőrendszer", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Június vége – Július (teljes virágzásban, a felső 20-25 cm-es hajtás)",
                 hatoanyagok: ["Hipericin, pszeudohipericin (naftodiantronok - vörös festékanyag)", "Hiperforin (floroglucin-származék)", "Flavonoidok (hiperozid, rutin)"],
                 hatas: "Enyhe és középsúlyos depresszió, szorongás elleni (szerotonin-, dopamin- és noradrenalin-visszavétel gátló); olaja sebgyógyító és égési sérülésekre kiváló.",
@@ -1823,7 +1869,7 @@
                 latinNev: "Angelica archangelica",
                 drog: "Angelicae radix",
                 hatoanyagCsoportok: ["Illóolajok", "Kumarinok", "Keserűanyagok"],
-                terapia: ["Emésztőrendszer", "Idegrendszer"],
+                terapia: ["Emésztőrendszer", "Idegrendszer", "Roborálás és keringés"],
                 gyujtes: "Ősz (első- vagy másodéves növény gyökértörzse)",
                 hatoanyagok: ["Illóolaj (fellandrén, pinén)", "Furanokumarinok (angelicin, bergaptén)", "Keserűanyagok"],
                 hatas: "Erős gyomorerősítő, szélhajtó, görcsoldó, étvágygerjesztő és idegerősítő.",
@@ -1835,7 +1881,7 @@
                 latinNev: "Marrubium vulgare",
                 drog: "Marrubii herba",
                 hatoanyagCsoportok: ["Keserűanyagok", "Cseranyagok", "Illóolajok"],
-                terapia: ["Légutak", "Emésztőrendszer"],
+                terapia: ["Légutak", "Máj- és eperendszer", "Emésztőrendszer"],
                 gyujtes: "Június – Augusztus (virágzó felső hajtásvég)",
                 hatoanyagok: ["Marrubiin (diterpén-lakton keserűanyag)", "Cseranyagok", "Illóolaj", "Flavonoidok"],
                 hatas: "Kiváló köptető és nyákoldó makacs hörghurutban, emellett keserűanyaga révén étvágyjavító és epehajtó.",
@@ -1847,7 +1893,7 @@
                 latinNev: "Melilotus officinalis",
                 drog: "Meliloti herba",
                 hatoanyagCsoportok: ["Kumarinok", "Flavonoidok", "Szaponinok"],
-                terapia: ["Szív- és érrendszer", "Külsőleges"],
+                terapia: ["Szív- és érrendszer", "Roborálás és keringés", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Június – Augusztus (virágzó felső hajtások)",
                 hatoanyagok: ["Melilotozidból száradáskor keletkező kumarin (0,4-1%)", "Flavonoidok", "Szaponinok"],
                 hatas: "Vénás és nyirokkeringést javító, ödémacsökkentő, visszérgyulladás- és aranyér-ellenes.",
@@ -1859,7 +1905,7 @@
                 latinNev: "Saponaria officinalis",
                 drog: "Saponariae rubrae radix",
                 hatoanyagCsoportok: ["Szaponinok", "Flavonoidok"],
-                terapia: ["Légutak", "Külsőleges"],
+                terapia: ["Légutak", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Ősz (gyökér és tarack)",
                 hatoanyagok: ["Triterpén-szaponinok (szaporubin, szaponarozid - 5-8%)", "Flavonoidok (szaponarin)"],
                 hatas: "Erős nyákoldó és köptető hurutos légúti megbetegedésekben; külsőleg bőrbetegségek (ekcéma, pikkelysömör) lemosószere.",
@@ -1871,7 +1917,7 @@
                 latinNev: "Pulmonaria officinalis",
                 drog: "Pulmonariae folium / herba",
                 hatoanyagCsoportok: ["Nyálkaanyagok", "Cseranyagok", "Flavonoidok", "Alkaloidok"],
-                terapia: ["Légutak"],
+                terapia: ["Légutak", "Szájüreg és torok"],
                 gyujtes: "Április – Május (virágzó hajtás vagy kifejlett tőlevelek)",
                 hatoanyagok: ["Nyálkaanyagok", "Kovasav (oldható formában)", "Allantoin", "Cseranyagok", "Flavonoidok"],
                 hatas: "Nyálkahártya-bevonó, köhögéscsillapító, rekedtséget enyhítő és légúti regeneráló.",
@@ -1883,7 +1929,7 @@
                 latinNev: "Veronica officinalis",
                 drog: "Veronicae herba",
                 hatoanyagCsoportok: ["Keserűanyagok", "Cseranyagok", "Flavonoidok", "Szaponinok"],
-                terapia: ["Légutak", "Emésztőrendszer", "Külsőleges"],
+                terapia: ["Légutak", "Anyagcsere", "Emésztőrendszer", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Június – Július (virágzó föld feletti hajtás)",
                 hatoanyagok: ["Iridoid-glikozidok (aukubin, katalpol, veronikozid)", "Cseranyagok", "Flavonoidok (luteolin)", "Szaponinok"],
                 hatas: "Légúti hurutoldó, étvágyjavító, emésztést segítő és enyhe koleszterinszint-csökkentő; külsőleg bőrviszketés elleni.",
@@ -1895,7 +1941,7 @@
                 latinNev: "Althaea officinalis",
                 drog: "Althaeae radix / folium",
                 hatoanyagCsoportok: ["Nyálkaanyagok", "Poliszacharidok", "Flavonoidok"],
-                terapia: ["Légutak", "Emésztőrendszer"],
+                terapia: ["Légutak", "Szájüreg és torok", "Emésztőrendszer", "Bőr és nyálkahártya"],
                 gyujtes: "Október – November (gyökér), Nyár (levél)",
                 hatoanyagok: ["Nyálkaanyagok (10-20% poliszacharid)", "Pektin", "Keményítő", "Aszparagin"],
                 hatas: "Kiváló nyálkahártya-bevonó, száraz ingerköhögést csillapító, gyomorhurut- és reflux-enyhítő.",
@@ -1907,7 +1953,7 @@
                 latinNev: "Salvia officinalis",
                 drog: "Salviae folium",
                 hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Keserűanyagok", "Flavonoidok"],
-                terapia: ["Légutak", "Emésztőrendszer", "Külsőleges"],
+                terapia: ["Szájüreg és torok", "Légutak", "Emésztőrendszer", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Május – Június (virágzás előtt, fiatal levelek)",
                 hatoanyagok: ["Illóolaj (tujon, cineol, kámfor)", "Rozmaringsav (cseranyag)", "Karnozolsav (keserűanyag)", "Flavonoidok"],
                 hatas: "Erős összehúzó, gyulladáscsökkentő, antibakteriális (torok- és ínygyulladásra), izzadásgátló és emésztésjavító.",
@@ -1919,7 +1965,7 @@
                 latinNev: "Verbascum thapsus / V. phlomoides",
                 drog: "Verbasci flos",
                 hatoanyagCsoportok: ["Nyálkaanyagok", "Szaponinok", "Flavonoidok", "Keserűanyagok"],
-                terapia: ["Légutak"],
+                terapia: ["Légutak", "Szájüreg és torok"],
                 gyujtes: "Július – Szeptember (reggelente csak a teljesen kinyílt sárga virágpárták csésze nélkül!)",
                 hatoanyagok: ["Nyálkaanyagok (3%)", "Triterpén-szaponinok (verbaszkoszaponin)", "Iridoidok (aukubin)", "Flavonoidok"],
                 hatas: "Kiváló köptető, nyákoldó és nyálkahártya-bevonó hörghurut, száraz köhögés és rekedtség esetén.",
@@ -1931,7 +1977,7 @@
                 latinNev: "Inula helenium",
                 drog: "Helenii rhizoma et radix",
                 hatoanyagCsoportok: ["Poliszacharidok", "Illóolajok", "Keserűanyagok"],
-                terapia: ["Légutak", "Emésztőrendszer"],
+                terapia: ["Légutak", "Máj- és eperendszer", "Emésztőrendszer"],
                 gyujtes: "Ősz (2-3 éves növény gyökértörzse)",
                 hatoanyagok: ["Inulin (ősszel akár 40-44%!)", "Illóolaj (alantolakton, izoalantolakton - ún. helenin)", "Keserűanyagok"],
                 hatas: "Erős köptető, hörgőfertőtlenítő, epehajtó, étvágyjavító és bélparazita-ellenes.",
@@ -1991,7 +2037,7 @@
                 latinNev: "Filipendula ulmaria",
                 drog: "Spiraeae flos / herba",
                 hatoanyagCsoportok: ["Flavonoidok", "Cseranyagok", "Illóolajok"],
-                terapia: ["Légutak", "Szív- és érrendszer", "Húgyutak"],
+                terapia: ["Mozgásszervek", "Légutak", "Szív- és érrendszer", "Húgyutak", "Láz és fájdalom"],
                 gyujtes: "Június – Augusztus (virágzat és felső hajtás)",
                 hatoanyagok: ["Szalicilát-glikozidok (spiraein, monotropitin - ebből szalicilsav képződik)", "Flavonoidok (spiraeozid)", "Ellagitannin cseranyagok"],
                 hatas: "Természetes lázcsillapító, izzasztó, gyulladáscsökkentő és fájdalomcsillapító (ízületi és meghűléses panaszokra).",
@@ -2015,7 +2061,7 @@
                 latinNev: "Rosmarinus officinalis",
                 drog: "Rosmarini folium",
                 hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Keserűanyagok", "Flavonoidok"],
-                terapia: ["Szív- és érrendszer", "Emésztőrendszer", "Külsőleges"],
+                terapia: ["Szív- és érrendszer", "Máj- és eperendszer", "Mozgásszervek", "Emésztőrendszer", "Roborálás és keringés", "Külsőleges"],
                 gyujtes: "Nyár – Ősz (levelek és fiatal hajtások)",
                 hatoanyagok: ["Illóolaj (1,8-cineol, kámfor, alfa-pinén, borneol)", "Rozmaringsav", "Karnozolsav (keserűanyag)", "Flavonoidok"],
                 hatas: "Vérkeringést serkentő (alacsony vérnyomás esetén élénkítő), epehajtó, görcsoldó; külsőleg reumaellenes és hajhagymákat serkentő.",
@@ -2027,7 +2073,7 @@
                 latinNev: "Rubus fruticosus",
                 drog: "Rubi fruticosi folium",
                 hatoanyagCsoportok: ["Cseranyagok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer", "Légutak", "Külsőleges"],
+                terapia: ["Emésztőrendszer", "Szájüreg és torok", "Légutak", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Május – Június (fiatal, egészséges levelek)",
                 hatoanyagok: ["Ellagitannin típusú cseranyagok (8-14%)", "Flavonoidok (kvercetin, kempferol)", "Gyümölcssavak"],
                 hatas: "Összehúzó, gyulladáscsökkentő, hasmenés elleni, torok- és szájnyálkahártya-öblögető hatású.",
@@ -2039,7 +2085,7 @@
                 latinNev: "Euphrasia rostkoviana",
                 drog: "Euphrasiae herba",
                 hatoanyagCsoportok: ["Keserűanyagok", "Cseranyagok", "Flavonoidok"],
-                terapia: ["Külsőleges", "Légutak"],
+                terapia: ["Szemészet", "Bőr és nyálkahártya", "Külsőleges", "Légutak"],
                 gyujtes: "Július – Szeptember (virágzó föld feletti hajtás)",
                 hatoanyagok: ["Iridoid-glikozidok (aukubin, katalpol)", "Cseranyagok", "Flavonoidok (luteolin, apigenin)", "Fenolsavak"],
                 hatas: "Kötőhártya-gyulladás, szemhéjszél-gyulladás, szemfáradtság és könnyezés elleni összehúzó és gyulladáscsökkentő.",
@@ -2051,7 +2097,7 @@
                 latinNev: "Origanum vulgare",
                 drog: "Origani herba",
                 hatoanyagCsoportok: ["Illóolajok", "Cseranyagok", "Flavonoidok"],
-                terapia: ["Légutak", "Emésztőrendszer"],
+                terapia: ["Légutak", "Emésztőrendszer", "Immunrendszer"],
                 gyujtes: "Július – Augusztus (virágzó felső hajtások)",
                 hatoanyagok: ["Illóolaj (karvakrol, timol - erős antimikrobiális fenolok)", "Rozmaringsav", "Flavonoidok"],
                 hatas: "Erős antibakteriális és gombaellenes, köptető, köhögéscsillapító, étvágyjavító és emésztést serkentő.",
@@ -2075,7 +2121,7 @@
                 latinNev: "Artemisia dracunculus",
                 drog: "Dracunculi herba",
                 hatoanyagCsoportok: ["Illóolajok", "Kumarinok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer"],
                 gyujtes: "Június – Augusztus (leveles, virágzó hajtások)",
                 hatoanyagok: ["Illóolaj (esztragol, ocimén, fellandrén)", "Kumarinok (herniarin)", "Flavonoidok", "Cseranyagok"],
                 hatas: "Étvágygerjesztő, emésztésserkentő, epehajtó, szélhajtó és enyhe vizelethajtó.",
@@ -2087,7 +2133,7 @@
                 latinNev: "Gentiana lutea",
                 drog: "Gentianae radix",
                 hatoanyagCsoportok: ["Keserűanyagok"],
-                terapia: ["Emésztőrendszer"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer", "Roborálás és keringés"],
                 gyujtes: "Ősz (többéves növény gyökere – csak külföldi termesztésből származó drog!)",
                 hatoanyagok: ["Szekoiridoid keserűanyagok (genciopikrozid 2-3%, amarogencin - a világ egyik legkeserűbb természetes anyaga!)", "Xantonok (gentizin)"],
                 hatas: "Tiszta keserűanyag (amara pura): reflexesen fokozza a nyál-, gyomornedv- és epetermelést, étvágytalanság és emésztési gyengeség ellen kiváló.",
@@ -2099,7 +2145,7 @@
                 latinNev: "Vinca minor",
                 drog: "Vincae minoris herba",
                 hatoanyagCsoportok: ["Alkaloidok", "Cseranyagok", "Flavonoidok"],
-                terapia: ["Szív- és érrendszer"],
+                terapia: ["Szív- és érrendszer", "Idegrendszer", "Roborálás és keringés"],
                 gyujtes: "Tavasz – Nyár (leveles hajtások)",
                 hatoanyagok: ["Indol-alkaloidok (vinkamin - agyi értágító)", "Cseranyagok", "Flavonoidok", "Urzolsav"],
                 hatas: "Javítja az agyi vérkeringést és oxigénellátást, enyhén csökkenti a vérnyomást (elsősorban gyógyszeripari alapanyag).",
@@ -2111,7 +2157,7 @@
                 latinNev: "Armoracia rusticana",
                 drog: "Armoraciae recens radix",
                 hatoanyagCsoportok: ["Illóolajok"],
-                terapia: ["Légutak", "Húgyutak", "Külsőleges"],
+                terapia: ["Légutak", "Húgyutak", "Mozgásszervek", "Immunrendszer", "Külsőleges"],
                 gyujtes: "Ősz – Tavasz (friss karógyökér)",
                 hatoanyagok: ["Mustárolaj-glikozidok (szinigrin, glükonazturtiin - reszeléskor mirozináz enzim hatására allil-izotiocianát szabadul fel!)", "C-vitamin"],
                 hatas: "Erős antibakteriális és vírusellenes ('növényi antibiotikum') légúti és húgyúti fertőzésekben; külsőleg vérbőséget okozó reumaellenes.",
@@ -2123,7 +2169,7 @@
                 latinNev: "Quercus robur / Q. petraea",
                 drog: "Quercus cortex",
                 hatoanyagCsoportok: ["Cseranyagok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer", "Külsőleges"],
+                terapia: ["Emésztőrendszer", "Szájüreg és torok", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Kora tavasz (fiatal, sima ágak kérge – természetvédelmi és erdészeti engedéllyel!)",
                 hatoanyagok: ["Ellagitannin és katekines cseranyagok (10-20%)", "Flavonoidok (kvercetin)", "Triterpének"],
                 hatas: "Erőteljes összehúzó (adsztringens), gyulladáscsökkentő és vérzéscsillapító; belsőleg heveny hasmenésre, külsőleg aranyérre, lábizzadásra és szájüregi öblögetésre.",
@@ -2135,7 +2181,7 @@
                 latinNev: "Stellaria media",
                 drog: "Stellariae herba",
                 hatoanyagCsoportok: ["Szaponinok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer", "Húgyutak", "Külsőleges"],
+                terapia: ["Máj- és eperendszer", "Anyagcsere", "Emésztőrendszer", "Húgyutak", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Tavasz – Ősz (virágzó föld feletti hajtás)",
                 hatoanyagok: ["Triterpén-szaponinok", "Flavonoidok (rutin, apigenin-glikozidok)", "C-vitamin", "Kálium", "Kovasav"],
                 hatas: "Epehajtó, koleszterinszint-csökkentő, enyhe vízhajtó és anyagcsere-fokozó; külsőleg bőrviszketés és ekcéma elleni.",
@@ -2147,7 +2193,7 @@
                 latinNev: "Aesculus hippocastanum",
                 drog: "Hippocastani semen",
                 hatoanyagCsoportok: ["Szaponinok", "Kumarinok", "Flavonoidok"],
-                terapia: ["Szív- és érrendszer", "Külsőleges"],
+                terapia: ["Szív- és érrendszer", "Roborálás és keringés", "Külsőleges"],
                 gyujtes: "Szeptember – Október (érett mag)",
                 hatoanyagok: ["Eszcin (triterpén-szaponin keverék)", "Eszkulin (kumarin-glikozid)", "Flavonoidok"],
                 hatas: "Erősíti a vénák falát, csökkenti a hajszálerek áteresztőképességét, ödémacsökkentő és visszérgyulladás-gátló.",
@@ -2159,7 +2205,7 @@
                 latinNev: "Chelidonium majus",
                 drog: "Chelidonii herba",
                 hatoanyagCsoportok: ["Alkaloidok", "Flavonoidok"],
-                terapia: ["Külsőleges", "Emésztőrendszer"],
+                terapia: ["Bőr és nyálkahártya", "Külsőleges", "Máj- és eperendszer", "Emésztőrendszer"],
                 gyujtes: "Május – Július (virágzó föld feletti hajtás)",
                 hatoanyagok: ["Izokinolin-alkaloidok (kelidonin, szangvinarin, berberin - több mint 20 alkaloid!)", "Kávésav-származékok", "Flavonoidok"],
                 hatas: "Külsőleg friss narancssárga tejnedve vírusos szemölcsök és tyúkszemek elleni; belsőleg epeúti görcsoldó.",
@@ -2171,7 +2217,7 @@
                 latinNev: "Potentilla erecta",
                 drog: "Tormentillae rhizoma",
                 hatoanyagCsoportok: ["Cseranyagok", "Flavonoidok"],
-                terapia: ["Emésztőrendszer", "Külsőleges"],
+                terapia: ["Emésztőrendszer", "Szájüreg és torok", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Ősz vagy Tavasz (gyökértörzs – elvágva vörösre színeződik!)",
                 hatoanyagok: ["Katekines cseranyagok (15-22% - az egyik legmagasabb cseranyagtartalmú hazai drog!)", "Tormentillol", "Flavonoidok"],
                 hatas: "Rendkívül erős összehúzó (adsztringens), heveny hasmenés elleni, vérzéscsillapító és nyálkahártya-gyulladást gátló (szájüreg, fogíny).",
@@ -2183,7 +2229,7 @@
                 latinNev: "Menyanthes trifoliata",
                 drog: "Trifolii fibrini folium",
                 hatoanyagCsoportok: ["Keserűanyagok", "Flavonoidok", "Cseranyagok"],
-                terapia: ["Emésztőrendszer"],
+                terapia: ["Emésztőrendszer", "Máj- és eperendszer"],
                 gyujtes: "Május – Június (háromosztatú levelek – Magyarországon védett faj, csak termesztett drog használható!)",
                 hatoanyagok: ["Szekoiridoid keserűanyagok (foliamentin, mentiafolin, loganin)", "Flavonoidok (rutin, hiperozid)", "Cseranyagok"],
                 hatas: "Tiszta keserűanyag (amara pura): étvágyjavító, gyomornedv- és epetermelést serkentő, emésztési gyengeség elleni.",
@@ -2195,14 +2241,16 @@
                 latinNev: "Allium cepa",
                 drog: "Allii cepae bulbus",
                 hatoanyagCsoportok: ["Flavonoidok", "Illóolajok", "Poliszacharidok"],
-                terapia: ["Légutak", "Szív- és érrendszer", "Külsőleges"],
+                terapia: ["Légutak", "Szív- és érrendszer", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Nyár vége – Ősz (érett hagymatest)",
                 hatoanyagok: ["Kéntartalmú vegyületek (propánszulfonsav-származékok, cepaén)", "Flavonoidok (különösen kvercetin a külső héjban)", "Pektin és fruktánok"],
                 hatas: "Légúti hurutoldó és köhögéscsillapító, gyulladáscsökkentő, érrendszert védő; külsőleg rovarcsípésre és helyi irritációra.",
                 elkeszites: "Friss lé, mézes hagymaszirup (köhögésre) vagy borogatás; a barna hagymahéj forrázatként is ismert a népi gyakorlatban.",
                 hagyomany: "A makói hagymatermesztés révén Magyarországon külön gazdasági és népi hagyomány kapcsolódik hozzá."
             }
-        ].sort((a, b) => a.nev.localeCompare(b.nev, "hu"));
+        ];
+
+        novenyekAdatbazis.sort((a, b) => a.nev.localeCompare(b.nev, "hu"));
 
         document.addEventListener("DOMContentLoaded", () => {
             const dbTabBtn = document.getElementById("dbTabBtn");
@@ -2241,7 +2289,7 @@
             const cardsGrid = document.getElementById("cardsGrid");
             const searchInput = document.getElementById("searchInput");
             const hatoanyagSelect = document.getElementById("hatoanyagSelect");
-            const terapiaButtons = document.querySelectorAll("#terapiaFilters .filter-btn");
+            const terapiaFiltersContainer = document.getElementById("terapiaFilters");
             const resultCount = document.getElementById("resultCount");
             const resetBtn = document.getElementById("resetFilters");
 
@@ -2253,16 +2301,40 @@
             let activeHatoanyag = "Összes";
             let searchQuery = "";
 
-            function renderCards(list) {
-                cardsGrid.innerHTML = "";
-                resultCount.textContent = `Megjelenítve: ${list.length} / ${novenyekAdatbazis.length} gyógynövény`;
+            const allChemGroups = Array.from(new Set(
+                novenyekAdatbazis.flatMap(n => n.hatoanyagCsoportok)
+            )).sort((a, b) => a.localeCompare(b, "hu"));
 
-                if (list.length === 0) {
+            hatoanyagSelect.innerHTML = `<option value="Összes">Minden hatóanyagcsoport</option>` +
+                allChemGroups.map(g => `<option value="${g.replace(/"/g, "&quot;")}">${g}</option>`).join("");
+
+            TERAPIAS_TERULETEK.forEach((terulet, idx) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = idx === 0 ? "filter-btn active" : "filter-btn";
+                btn.dataset.type = "terapia";
+                btn.dataset.value = terulet;
+                btn.textContent = terulet;
+                btn.addEventListener("click", () => {
+                    terapiaFiltersContainer.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    activeTerapia = terulet;
+                    applyFilters();
+                });
+                terapiaFiltersContainer.appendChild(btn);
+            });
+
+            function renderCards(list) {
+                const sortedList = [...list].sort((a, b) => a.nev.localeCompare(b.nev, "hu"));
+                cardsGrid.innerHTML = "";
+                resultCount.textContent = `Megjelenítve: ${sortedList.length} / ${novenyekAdatbazis.length} gyógynövény`;
+
+                if (sortedList.length === 0) {
                     cardsGrid.innerHTML = `<p style="color: var(--text-muted);">Nincs a szűrésnek megfelelő gyógynövény.</p>`;
                     return;
                 }
 
-                list.forEach(noveny => {
+                sortedList.forEach(noveny => {
                     const card = document.createElement("div");
                     card.className = "plant-card";
 
@@ -2299,6 +2371,8 @@
                         n.latinNev.toLowerCase().includes(q) ||
                         n.drog.toLowerCase().includes(q) ||
                         n.hatas.toLowerCase().includes(q) ||
+                        n.terapia.some(t => t.toLowerCase().includes(q)) ||
+                        n.hatoanyagCsoportok.some(c => c.toLowerCase().includes(q)) ||
                         n.hatoanyagok.some(h => h.toLowerCase().includes(q));
 
                     return matchTerapia && matchHatoanyag && matchSearch;
@@ -2314,13 +2388,18 @@
                     <div class="drog-name">Drog: <strong>${n.drog}</strong></div>
 
                     <div class="modal-section">
+                        <h4>Terápiás területek</h4>
+                        <p>${n.terapia.join(", ")}</p>
+                    </div>
+
+                    <div class="modal-section">
                         <h4>Gyűjtési idő és rész</h4>
                         <p>${n.gyujtes}</p>
                     </div>
 
                     <div class="modal-section">
-                        <h4>Fő hatóanyagok</h4>
-                        <p>${n.hatoanyagok.join(", ")}</p>
+                        <h4>Hatóanyagcsoportok és fő hatóanyagok</h4>
+                        <p><strong>Csoportok:</strong> ${n.hatoanyagCsoportok.join(", ")}<br><strong>Vegyületek:</strong> ${n.hatoanyagok.join(", ")}</p>
                     </div>
 
                     <div class="modal-section">
@@ -2356,23 +2435,15 @@
                 applyFilters();
             });
 
-            terapiaButtons.forEach(btn => {
-                btn.addEventListener("click", () => {
-                    terapiaButtons.forEach(b => b.classList.remove("active"));
-                    btn.classList.add("active");
-                    activeTerapia = btn.dataset.value;
-                    applyFilters();
-                });
-            });
-
             resetBtn.addEventListener("click", () => {
                 searchQuery = "";
                 searchInput.value = "";
                 activeTerapia = "Összes";
                 activeHatoanyag = "Összes";
                 hatoanyagSelect.value = "Összes";
-                terapiaButtons.forEach(b => b.classList.remove("active"));
-                if (terapiaButtons[0]) terapiaButtons[0].classList.add("active");
+                const buttons = terapiaFiltersContainer.querySelectorAll(".filter-btn");
+                buttons.forEach(b => b.classList.remove("active"));
+                if (buttons[0]) buttons[0].classList.add("active");
                 applyFilters();
             });
 
@@ -2450,10 +2521,10 @@
                             "Korai tavaszi virágok (például tavaszi kankalin – csak termesztett állományból, kökényvirág) száraz, napos időben."
                         ],
                         harvestWaning: [
-                            "Fiatal, sima kéregű hajtások kérge (például tölgyfakéreg, fűzfakéreg – a kutyabenge kérgét szárítás és érlelés után használd).",
+                            "Fiatal, sima kéregű hajtások kérge (például tölgyfakéreg, fűzfakéreg, mezei szil – a kutyabenge kérgét szárítás és érlelés után használd).",
                             "Tavaszi gyökerek és gyökértörzsek (például gyermekláncfű, gyömbérgyökerű szegfűszeg, torma) begyűjtése."
                         ],
-                        recommendedPlantNames: ["Medvehagyma", "Csalán (Nagy csalán)", "Tölgyfakéreg (Kocsányos és kocsánytalan tölgy)", "Fűzfakéreg (Csere- és fehér fűz)", "Kankalin (Tavaszi kankalin)", "Tyúkhúr (Közönséges tyúkhúr)"]
+                        recommendedPlantNames: ["Medvehagyma", "Csalán (Nagy csalán)", "Tölgyfakéreg (Kocsányos és kocsánytalan tölgy)", "Fűzfakéreg (Csere- és fehér fűz)", "Kankalin (Tavaszi kankalin)", "Mezei szil (Szilfakéreg)"]
                     };
                 }
 
@@ -2473,14 +2544,14 @@
                             "Túlzottan elburjánzó hajtások visszafogása a tövek körül."
                         ],
                         harvestWaxing: [
-                            "Virágzó hajtások és virágzatok (például kamilla, cickafark, orbáncfű, hársfa, levendula, borsmenta, kakukkfű) a harmat felszáradása után.",
+                            "Virágzó hajtások és virágzatok (például kamilla, cickafark, orbáncfű, hársfa, levendula, borsmenta, fodormenta, kakukkfű) a harmat felszáradása után.",
                             "Friss levelek és fűszerhajtások (például bazsalikom, majoránna, citromfű, lándzsás útifű, szederlevél) kíméletes szárítással."
                         ],
                         harvestWaning: [
                             "Nyár végi érett magvak és termések (például kömény, koriander, édeskömény, kapor, görögszéna) begyűjtése.",
                             "Szárítótálcák átforgatása és árnyékos, jól szellőző helyen történő utószárítása."
                         ],
-                        recommendedPlantNames: ["Kamilla (Orvosi székfű)", "Borsmenta", "Cickafark (Közönséges cickafark)", "Orbáncfű (Közönséges orbáncfű)", "Kerti kakukkfű", "Lándzsás útifű"]
+                        recommendedPlantNames: ["Kamilla (Orvosi székfű)", "Borsmenta", "Fodormenta", "Cickafark (Közönséges cickafark)", "Orbáncfű (Közönséges orbáncfű)", "Kerti kakukkfű"]
                     };
                 }
 
@@ -2636,7 +2707,7 @@
                 renderLunarCalendar();
             });
 
-            // KVÍZ LOGIKA (10 kérdéses körök + Rangok + változatos 3. szint)
+            // KVÍZ LOGIKA
             const QUESTIONS_PER_ROUND = 10;
             const levelButtons = document.querySelectorAll(".level-btn");
             const questionCounter = document.getElementById("questionCounter");
@@ -2733,8 +2804,8 @@
                 renderCurrentQuestion();
             }
 
-            function buildLevel3Question(correctPlant) {
-                const modes = ["compounds", "groups", "prep"];
+            function buildLevel3Question(correctPlant, distractors) {
+                const modes = ["compounds", "groups", "prep", "oddGroup"];
                 const mode = modes[Math.floor(Math.random() * modes.length)];
 
                 if (mode === "groups") {
@@ -2751,6 +2822,18 @@
                         question: `Melyik gyógynövény elkészítési módjára vagy ellenjavallatára utal ez az iránymutatás?\n„${correctPlant.elkeszites}”`,
                         choiceLabel: (p) => `${p.nev} (${p.latinNev})`
                     };
+                }
+
+                if (mode === "oddGroup" && distractors.length >= 3) {
+                    const missingGroups = allChemGroups.filter(g => !correctPlant.hatoanyagCsoportok.includes(g));
+                    if (missingGroups.length > 0) {
+                        const targetGroup = missingGroups[Math.floor(Math.random() * missingGroups.length)];
+                        return {
+                            badge: "3. Szint (Farmakognózia) – Kizárásos hatóanyagcsoport",
+                            question: `Melyik gyógynövény NEM tartalmaz jellemzően „${targetGroup}” hatóanyagcsoportot, ellentétben a többivel?\n(Tipp: figyeld a hatóanyagcsoport-címkéket!)`,
+                            choiceLabel: (p) => `${p.nev} – [${p.hatoanyagCsoportok.join(", ")}]`
+                        };
+                    }
                 }
 
                 const chemList = Array.isArray(correctPlant.hatoanyagok)
@@ -2790,7 +2873,7 @@
                     questionText = `Mi a hivatalos drogmegnevezése és latin neve ennek a növénynek: ${correctPlant.nev}?`;
                     getChoiceLabel = (p) => `${p.drog} (${p.latinNev})`;
                 } else {
-                    const built = buildLevel3Question(correctPlant);
+                    const built = buildLevel3Question(correctPlant, distractors);
                     quizBadge.textContent = built.badge;
                     questionText = built.question;
                     getChoiceLabel = built.choiceLabel;
@@ -2807,11 +2890,13 @@
                         const allBtns = quizOptions.querySelectorAll(".quiz-option");
                         allBtns.forEach(b => b.disabled = true);
 
+                        const chemSummary = `Hatóanyagcsoportok: ${correctPlant.hatoanyagCsoportok.join(", ")} | Vegyületek: ${correctPlant.hatoanyagok.join(", ")}`;
+
                         if (choice.nev === correctPlant.nev) {
                             btn.classList.add("correct");
                             score++;
                             scoreText.textContent = `${score}`;
-                            quizFeedback.innerHTML = `✅ <strong>Helyes!</strong> ${correctPlant.nev} (<em>${correctPlant.latinNev}</em>) – Drog: ${correctPlant.drog}.<br><small>${correctPlant.elkeszites}</small>`;
+                            quizFeedback.innerHTML = `✅ <strong>Helyes!</strong> ${correctPlant.nev} (<em>${correctPlant.latinNev}</em>) – Drog: ${correctPlant.drog}.<br><small>${chemSummary}<br>${correctPlant.elkeszites}</small>`;
                         } else {
                             btn.classList.add("wrong");
                             missedPlants.push(correctPlant);
@@ -2820,7 +2905,7 @@
                                     b.classList.add("correct");
                                 }
                             });
-                            quizFeedback.innerHTML = `❌ <strong>Téves!</strong> A helyes válasz: <strong>${correctPlant.nev}</strong> (<em>${correctPlant.latinNev}</em>).<br><small>${correctPlant.hatas}</small>`;
+                            quizFeedback.innerHTML = `❌ <strong>Téves!</strong> A helyes válasz: <strong>${correctPlant.nev}</strong> (<em>${correctPlant.latinNev}</em>).<br><small>${chemSummary}<br>${correctPlant.hatas}</small>`;
                         }
 
                         nextQuestionBtn.textContent = (currentQuestionIdx === totalQ - 1)
