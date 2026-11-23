@@ -192,7 +192,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
             gap: 20px;
-            padding-bottom: 50px;
+            padding-bottom: 40px;
         }
 
         .plant-card {
@@ -259,7 +259,7 @@
         /* HOLDNAPTÁR STÍLUSOK */
         .lunar-wrapper {
             max-width: 960px;
-            margin: 28px auto 60px;
+            margin: 28px auto 40px;
         }
 
         .lunar-top-card {
@@ -411,7 +411,7 @@
         /* KVÍZ STÍLUSOK */
         .quiz-wrapper {
             max-width: 780px;
-            margin: 28px auto 60px;
+            margin: 28px auto 40px;
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 14px;
@@ -657,6 +657,37 @@
             color: var(--accent);
         }
 
+        /* LÁBLÉC / JOGI TÁJÉKOZTATÓ */
+        .site-footer {
+            border-top: 1px solid var(--border);
+            background: #0b120e;
+            padding: 20px 0 32px;
+            margin-top: 16px;
+        }
+
+        .footer-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--gold);
+            border-radius: 10px;
+            padding: 16px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .footer-text {
+            max-width: 820px;
+            font-size: 0.88rem;
+            color: #cbd5e1;
+        }
+
+        .footer-text strong {
+            color: var(--gold);
+        }
+
         /* MODAL */
         .modal {
             position: fixed;
@@ -741,20 +772,6 @@
                     <label>Hatóanyagcsoport:</label>
                     <select id="hatoanyagSelect">
                         <option value="Összes">Minden hatóanyagcsoport</option>
-                        <option value="Illóolajok">Illóolajok</option>
-                        <option value="Cseranyagok">Cseranyagok</option>
-                        <option value="Flavonoidok">Flavonoidok</option>
-                        <option value="Keserűanyagok">Keserűanyagok</option>
-                        <option value="Nyálkaanyagok">Nyálkaanyagok</option>
-                        <option value="Szaponinok">Szaponinok</option>
-                        <option value="Alkaloidok">Alkaloidok</option>
-                        <option value="Kumarinok">Kumarinok</option>
-                        <option value="Poliszacharidok">Poliszacharidok</option>
-                        <option value="Antrakinonok">Antrakinonok</option>
-                        <option value="Antociánok">Antociánok</option>
-                        <option value="Fenolglikozidok">Fenolglikozidok</option>
-                        <option value="Triterpének">Triterpének</option>
-                        <option value="Szterolok">Szterolok</option>
                     </select>
                 </div>
 
@@ -886,6 +903,17 @@
             </div>
         </div>
     </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-box">
+                <p class="footer-text">
+                    <strong>Tájékoztató:</strong> Az oldal kizárólag ismeretterjesztő, etnobotanikai, farmakognóziai és kertészeti tananyag, nem minősül orvosi diagnózisnak, terápiának vagy gyógyszerészeti tanácsadásnak. A növények felismerése, gyűjtése, elkészítése és az ellenjavallatok/védettségi szabályok betartása minden esetben a felhasználó saját felelőssége.
+                </p>
+                <button type="button" id="openLegalBtn" class="secondary-btn">⚖️ Jogi és etikai tudnivalók</button>
+            </div>
+        </div>
+    </footer>
 
     <div id="plantModal" class="modal hidden">
         <div class="modal-content">
@@ -1390,7 +1418,7 @@
                 drog: "Helichrysi flos",
                 hatoanyagCsoportok: ["Flavonoidok", "Keserűanyagok", "Illóolajok"],
                 terapia: ["Máj- és eperendszer", "Emésztőrendszer"],
-                gyujtes: "Július – Augusztus (teljesen ki nem nyílt virágzat)",
+                gyujtes: "Július – Augusztus (teljesen ki nem nyílt virágzat – Magyarországon védett, csak termesztett állományból!)",
                 hatoanyagok: ["Flavonoidok (izoszaliperpozid, naringenin)", "Keserűanyagok", "Illóolaj", "Ftálidok"],
                 hatas: "Kifejezett epehajtó, májvédő, görcsoldó és emésztésserkentő.",
                 elkeszites: "Forrázat vagy rövid főzet (1 teáskanál/csésze).",
@@ -1462,7 +1490,7 @@
                 drog: "Primulae radix / flos",
                 hatoanyagCsoportok: ["Szaponinok", "Flavonoidok"],
                 terapia: ["Légutak"],
-                gyujtes: "Tavasz (virág), Ősz (gyökér - csak termesztett állományból!)",
+                gyujtes: "Tavasz (virág), Ősz (gyökér - Magyarországon védett, vadon gyűjteni tilos!)",
                 hatoanyagok: ["Triterpén-szaponinok (primulasav, 5-10% a gyökérben)", "Fenolglikozidok (primverin)", "Flavonoidok"],
                 hatas: "Erős nyákoldó és köptető (a szaponinok reflexesen fokozzák a hörgőváladék termelődését és hígulását).",
                 elkeszites: "Főzet a gyökérből (1 kávéskanál/csésze), forrázat a virágból. Magyarországon védett növény, vadon gyűjteni tilos!",
@@ -1835,7 +1863,7 @@
                 hatoanyagCsoportok: ["Cseranyagok", "Nyálkaanyagok", "Flavonoidok"],
                 terapia: ["Emésztőrendszer", "Bőr és nyálkahártya", "Külsőleges"],
                 gyujtes: "Kora tavasz (fiatal, sima ágak kérge – erdészeti és természetvédelmi szabályok betartásával)",
-                hatoanyagok: ["Cseranyagok", "Nyálkaanyagok", "Flavonoidok", "FitSzterolok"],
+                hatoanyagok: ["Cseranyagok", "Nyálkaanyagok", "Flavonoidok", "Fitoszterolok"],
                 hatas: "Összehúzó, nyálkahártya-kímélő és gyulladáscsökkentő; hagyományosan hasmenés, bélhurut és külsőleg bőrkiütések, sebek lemosására használják.",
                 elkeszites: "Főzet (1 teáskanál aprított kéreg/csésze, 5-10 perc főzés) belsőleg vagy külsőleg borogatásra.",
                 hagyomany: "A népi gyógyászatban a szilfa kérgét hasmenés és bőrkiütések ellen főzték, a kemény faanyagát pedig szerszámnyelekhez, kocsikhoz használták."
@@ -2296,6 +2324,7 @@
             const modal = document.getElementById("plantModal");
             const modalBody = document.getElementById("modalBody");
             const closeModal = document.getElementById("closeModal");
+            const openLegalBtn = document.getElementById("openLegalBtn");
 
             let activeTerapia = "Összes";
             let activeHatoanyag = "Összes";
@@ -2418,6 +2447,38 @@
                     </div>
                 `;
                 modal.classList.remove("hidden");
+            }
+
+            function openLegalModal() {
+                modalBody.innerHTML = `
+                    <h2>⚖️ Jogi és etikai tudnivalók</h2>
+                    <div class="latin-name">Ismeretterjesztő gyógynövény- és holdnaptár-adatbázis</div>
+
+                    <div class="modal-section">
+                        <h4>1. Egészségügyi felelősségkizárás</h4>
+                        <p>Az oldalon szereplő leírások a hagyományos és racionális népgyógyászati, farmakognóziai és fitoterápiás szakirodalom összegzését adják. Nem helyettesítik orvos, gyógyszerész vagy szakképzett egészségügyi szakember vizsgálatát és tanácsát. Különösen fontos ez várandósság, szoptatás, gyermekkor, krónikus betegség vagy rendszeres gyógyszerszedés esetén.</p>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4>2. Biztonságos használat és kölcsönhatások</h4>
+                        <p>Több gyógynövénynél kifejezett ellenjavallat, mérgező növényrész vagy gyógyszerkölcsönhatás áll fenn (például májkárosító vegyületek, fényérzékenyítés, vérnyomás- vagy véralvadás-befolyásolás). A kvízben és a leírásokban szereplő tudnivalók tanulási célúak, nem öngyógyításra szolgáló utasítások.</p>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4>3. Természetvédelmi és gyűjtési szabályok</h4>
+                        <p>A vadon élő védett növényfajok gyűjtése, károsítása vagy engedély nélküli kitermelése jogszabályba ütközik, és a mérgező fajokkal való összetévesztés komoly kockázattal jár. A holdnaptár kiegészítő szemléleti támpont, amely nem írja felül a jogszabályokat és a tényleges botanikai/időjárási viszonyokat.</p>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4>4. Szerzői jog és adatkezelés</h4>
+                        <p>A tartalmak saját megfogalmazású összegzésekre épülnek; a későbbi bővítéseknél (például képek, külső analitika vagy egyéb funkciók bevezetésekor) mindenkor a vonatkozó szerzői jogi és adatvédelmi (GDPR) szabályok szerint érdemes eljárni.</p>
+                    </div>
+                `;
+                modal.classList.remove("hidden");
+            }
+
+            if (openLegalBtn) {
+                openLegalBtn.addEventListener("click", openLegalModal);
             }
 
             closeModal.addEventListener("click", () => modal.classList.add("hidden"));
